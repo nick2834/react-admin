@@ -1,0 +1,1 @@
+INSERT INTO `sys_user`(`id`, `username`, `password`, `email`, `phone`, `role_id`, `create_time`, `update_time`) VALUES (41, 'admin', '21232f297a57a5a743894a0e4a801fc3', NULL, NULL, NULL, '2021-02-26 14:18:57', '2021-02-26 14:18:57');

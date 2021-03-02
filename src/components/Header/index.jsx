@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { Layout, Menu, Dropdown, Modal } from 'antd';
 import { DownOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import memoryUtils from '@/utils/memoryUtils';
@@ -34,10 +35,11 @@ class MHeader extends Component {
         const { collapsed } = this.props;
         return (
             <Header className="header">
-                {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                    className: 'trigger',
-                    onClick: this.toggle,
-                })}
+                {
+                    collapsed ?
+                        <MenuUnfoldOutlined className="trigger" onClick={this.toggle} /> :
+                        <MenuFoldOutlined className="trigger" onClick={this.toggle} />
+                }
                 <Dropdown overlay={menu}>
                     <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
                         欢迎： {username} <DownOutlined />
@@ -48,4 +50,4 @@ class MHeader extends Component {
     }
 }
 
-export default MHeader
+export default withRouter(MHeader)
