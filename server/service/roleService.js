@@ -22,7 +22,7 @@ exports.list = (req, res) => {
 };
 
 exports.add = (req, res) => {
-    const { role_name, remark, create_user_id } = req.body;
+    const { role_name, remark, create_user_id, create_user_name } = req.body;
     base(tableName)
         .where({ role_name })
         .find()
@@ -33,11 +33,12 @@ exports.add = (req, res) => {
                     role_name,
                     remark: remark ? remark : null,
                     create_user_id: create_user_id ? create_user_id : null,
+                    create_user_name: create_user_name ? create_user_name : null,
                     create_time: moment().format("YYYY-MM-DD HH:mm:ss")
                 });
             } else {
                 res.json({ status: 1, msg: "此权限已存在" });
-                return new Promise(() => {});
+                return new Promise(() => { });
             }
         })
         .then((roles) => {

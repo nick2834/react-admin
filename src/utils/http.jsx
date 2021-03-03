@@ -1,7 +1,7 @@
 import axios from 'axios';
 // import React from 'react';
 // import ReactDOM from 'react-dom';
-import { message, Spin } from 'antd';
+import { message } from 'antd';
 axios.interceptors.request.use(
     config => {
         // var dom = document.createElement('div');

@@ -5,3 +5,5 @@ export const reqLogin = (username, password) =>
 
 //权限列表
 export const roleList = (data) => http.post("/api/role/list", data);
+//增加权限
+export const addRole = (data) => http.post("/api/role/add", data)

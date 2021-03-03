@@ -4,7 +4,8 @@ import React, { Component } from 'react';
 */
 import { Card, Button, Table } from 'antd';
 import { roleList } from '@/api';
-import moment from 'moment'
+import AddRole from './add-role-modal'
+import moment from 'moment';
 export default class Role extends Component {
     state = {
         pageSize: 10,
@@ -25,7 +26,7 @@ export default class Role extends Component {
             },
             {
                 title: "创建人",
-                dataIndex: 'create_user_id'
+                dataIndex: 'create_user_name'
             },
             {
                 title: "创建时间",
@@ -66,15 +67,24 @@ export default class Role extends Component {
     UNSAFE_componentWillMount() {
         this.initColumns()
     }
-    componentDidMount(){
+    componentDidMount() {
         this.getRoleList()
     }
+    handleAddRole = () => {
+        this.setState({ isModalVisible: true })
+    }
+    onConfirm = () => {
+        this.setState({ isModalVisible: false },() => this.getRoleList())
+    }
+    onClosed = () => {
+        this.setState({ isModalVisible: false })
+    }
     render() {
-        const { roles, pagination, role } = this.state;
+        const { roles, pagination, role, isModalVisible } = this.state;
         const title = (
             <span className="card_title">
-                <Button type="primary" style={{ marginRight: '10px' }}>创建角色</Button>
-                <Button disabled>设置角色权限</Button>
+                <Button type="primary" style={{ marginRight: '10px' }} onClick={this.handleAddRole}>创建角色</Button>
+                <Button disabled={role.length >= 0}>设置角色权限</Button>
             </span>
         )
         const rowSelection = {
@@ -96,6 +106,8 @@ export default class Role extends Component {
                     pagination={pagination}
                     onChange={this.handleTableChange}
                 ></Table>
+
+                <AddRole isModalVisible={isModalVisible} onConfirm={this.onConfirm} onClose={this.onClosed} />
             </Card >
         )
     }
