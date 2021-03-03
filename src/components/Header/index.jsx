@@ -41,7 +41,7 @@ class MHeader extends Component {
                         <MenuFoldOutlined className="trigger" onClick={this.toggle} />
                 }
                 <Dropdown overlay={menu}>
-                    <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                    <a className="ant-dropdown-link" onClick={e => e.preventDefault()} href="javacript:void(0);">
                         欢迎： {username} <DownOutlined />
                     </a>
                 </Dropdown>

@@ -24,7 +24,7 @@ export default class Admin extends Component {
     getBreadCrumbPath = () => {
         const path = this.props.location.pathname;
         let routePath;
-        path !== '/home' && menuList.map((item) => {
+        path !== '/home' && menuList.forEach((item) => {
             if (item.key === path) {
                 routePath = item
             } else if (item.children) {
@@ -53,7 +53,7 @@ export default class Admin extends Component {
     render() {
         const { user } = memoryUtils;
         const { collapsed } = this.state;
-        if (!user || !user.id) {
+        if (!user || !user.user_id) {
             return <Redirect to='/login' />
         }
         return (

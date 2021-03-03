@@ -1,31 +1,27 @@
 const { base } = require("../sql/dbConfig");
 const md5 = require("blueimp-md5");
+const moment = require("moment");
+const tableName = 'sys_user'
 exports.login = (req, res) => {
     const { username, password } = req.body;
-    base("sys_user")
+    base(tableName)
         .where({ username, password: md5(password) })
         .find()
         .then((user) => {
             //登录成功
             if (JSON.stringify(user) !== "{}") {
                 // 生成一个cookie(userid: user._id), 并交给浏览器保存
-                res.cookie("userid", user._id, { maxAge: 1000 * 60 * 60 * 24 });
+                res.cookie("userid", user.user_id, { maxAge: 1000 * 60 * 60 * 24 });
                 if (user.role_id) {
-                    base("roles")
-                        .where({ id: user.role_id })
-                        .find()
-                        .then((role) => {
-                            user.role = role;
-                            console.log("role user", user);
-                            res.send({ status: 0, data: user });
-                        });
+                    // base('sys_user_role').join({table:""})
+                    res.send({ status: 0, data: user });
                 } else {
-                    user.role = { menus: [] };
-                    // 返回登陆成功信息(包含user)
+                    delete user.password
+                        // 返回登陆成功信息(包含user)
                     res.json({ status: 0, data: user });
                 }
             } else {
-                res.json({ status: 1, msg: "用户名或密码不正确!" });
+                res.json({ status: 1, msg: "该用户不存在" });
             }
         })
         .catch((error) => {
@@ -35,13 +31,28 @@ exports.login = (req, res) => {
 };
 
 exports.register = (req, res) => {
-    const { username, password } = req.body;
-    base("sys_user")
+    const {
+        username,
+        password,
+        email,
+        mobile,
+        create_user_id,
+        status,
+    } = req.body;
+    base(tableName)
         .where({ username })
         .find()
         .then((user) => {
             if (JSON.stringify(user) === "{}") {
-                return base("sys_user").add({ username, password: md5(password) });
+                return base(tableName).add({
+                    username,
+                    password: md5(password),
+                    email,
+                    mobile,
+                    status: status ? status : 4, //状态 0：禁用 1：待审核 2：审核不通过 3：审核通过 4：正常
+                    create_user_id: create_user_id ? create_user_id : null,
+                    // create_time: moment().format("YYYY-MM-DD HH:mm:ss")
+                });
             } else {
                 res.json({ status: 1, msg: "此用户已存在" });
                 return new Promise(() => {});
@@ -59,14 +70,15 @@ exports.register = (req, res) => {
 
 exports.update = (req, res) => {
     const user = req.body;
-    base("sys_user")
-        .where({ id: user.id })
+    base(tableName)
+        .where({ user_id: user.user_id })
         .update(user)
         .then((oldUser) => {
-            const data = Object.assign(oldUser, user)
-            res.json({ status: 0, data })
-        }).catch(error => {
-            console.error('更新用户异常', error)
-            res.json({ status: 1, msg: '更新用户异常, 请重新尝试' })
+            const data = Object.assign(oldUser, user);
+            res.json({ status: 0, data });
         })
+        .catch((error) => {
+            console.error("更新用户异常", error);
+            res.json({ status: 1, msg: "更新用户异常, 请重新尝试" });
+        });
 };

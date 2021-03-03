@@ -23,18 +23,18 @@ export default class Login extends Component {
     onFinish = async (values) => {
         this.setState({ loadings: true })
         const { username, password } = values
-        const { data } = await reqLogin(username, password);
-        if (data.status === 0) {
+        const result = await reqLogin(username, password);
+        if (result.status === 0) {
             this.setState({ loadings: false })
             message.success('登陆成功');
-            const user = data.data
+            const user = result.data
             memoryUtils.user = user // 保存在内存中
             storageUtils.saveUser(user) // 保存到local中
             this.props.history.replace('/')
         } else { // 登陆失败
             this.setState({ loadings: false })
             // 提示错误信息
-            message.error(data.msg)
+            message.error(result.msg)
         }
     }
     render() {
