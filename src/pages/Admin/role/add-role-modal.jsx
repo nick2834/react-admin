@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Modal, Form, Input, Button } from 'antd';
+import { Modal, Form, Input, Button, message } from 'antd';
 import { addRole } from '@/api';
 import memoryUtils from '@/utils/memoryUtils';
 export default class AddRole extends Component {
@@ -10,16 +10,24 @@ export default class AddRole extends Component {
         }
     }
     handleCancel = () => {
-        this.props.onClose(false)
+        this.props.onConfirm(false)
     }
     onFinish = async (event) => {
         const { user_id, username } = memoryUtils.user;
         const userObject = { create_user_id: user_id, create_user_name: username }
         const data = Object.assign(event, userObject);
-        console.log(data)
         const result = await addRole(data)
-        console.log(result)
-        this.props.onConfirm(true)
+        if (result.status === 0) {
+            message.success('添加成功')
+            this.props.onConfirm(true)
+        } else {
+            message.error(result.msg)
+            this.props.onConfirm(false)
+        }
+
+    }
+    componentWillUnmount(){
+        console.log("componentWillUnmount")
     }
     render() {
         const { isModalVisible } = this.props;
@@ -31,9 +39,9 @@ export default class AddRole extends Component {
             wrapperCol: { offset: 8, span: 16 },
         }
         return (
-            <Modal title="增加角色" visible={isModalVisible} footer={null} closable={false}>
+            <Modal title="增加角色" visible={isModalVisible} footer={null} closable={false} destroyOnClose>
                 <Form {...layout} onFinish={this.onFinish}>
-                    <Form.Item name="role_name" label="角色名" rules={[{ required: true }]}>
+                    <Form.Item name="role_name" label="角色名" rules={[{ required: true,message:"角色名不能为空" }]}>
                         <Input />
                     </Form.Item>
                     <Form.Item name="remark" label="备注：">

@@ -9,4 +9,5 @@ router.get("/", function(req, res, next) {
 router.post("/login", service.login);
 router.post("/register", service.register);
 router.post("/update", service.update);
+router.post("/list", service.list);
 module.exports = router;

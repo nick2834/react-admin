@@ -8,4 +8,6 @@ router.get("/", function(req, res, next) {
 // 登录
 router.post("/list", service.list);
 router.post("/add", service.add);
+router.post("/delete/:role_id", service.delete);
+router.post("/update", service.update);
 module.exports = router;

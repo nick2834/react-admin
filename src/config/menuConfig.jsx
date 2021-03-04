@@ -4,6 +4,7 @@ const menuList = [{
     key: "/home", // 对应的path
     icon: < HomeOutlined />, // 图标名称
     isPublic: true, // 公开的
+    disabled: true
 },
 {
     title: "文章",

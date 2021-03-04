@@ -1,7 +1,7 @@
 const { base } = require("../sql/dbConfig");
 const md5 = require("blueimp-md5");
 const moment = require("moment");
-const tableName = 'sys_user'
+const tableName = "sys_user";
 exports.login = (req, res) => {
     const { username, password } = req.body;
     base(tableName)
@@ -16,8 +16,8 @@ exports.login = (req, res) => {
                     // base('sys_user_role').join({table:""})
                     res.send({ status: 0, data: user });
                 } else {
-                    delete user.password
-                        // 返回登陆成功信息(包含user)
+                    delete user.password;
+                    // 返回登陆成功信息(包含user)
                     res.json({ status: 0, data: user });
                 }
             } else {
@@ -38,6 +38,7 @@ exports.register = (req, res) => {
         mobile,
         create_user_id,
         status,
+        role,
     } = req.body;
     base(tableName)
         .where({ username })
@@ -46,7 +47,7 @@ exports.register = (req, res) => {
             if (JSON.stringify(user) === "{}") {
                 return base(tableName).add({
                     username,
-                    password: md5(password),
+                    password: password ? md5(password) : md5(123456),
                     email,
                     mobile,
                     status: status ? status : 4, //状态 0：禁用 1：待审核 2：审核不通过 3：审核通过 4：正常
@@ -59,6 +60,15 @@ exports.register = (req, res) => {
             }
         })
         .then((user) => {
+            console.log(tableName, user);
+            base("sys_user_role")
+                .add({
+                    user_id: user,
+                    role_id: role,
+                })
+                .then((res) => {
+                    console.log("sys_user_role", res);
+                });
             // 返回包含user的json数据
             res.json({ status: 0, data: user });
         })
@@ -80,5 +90,34 @@ exports.update = (req, res) => {
         .catch((error) => {
             console.error("更新用户异常", error);
             res.json({ status: 1, msg: "更新用户异常, 请重新尝试" });
+        });
+};
+
+exports.list = (req, res) => {
+    const { pageSize, pageNumber, data } = req.body;
+    base(tableName)
+        .page(Number(pageNumber), Number(pageSize))
+        .where(data)
+        // .field([
+        //     "user_id",
+        //     "username",
+        //     "status",
+        //     "email",
+        //     "mobile",
+        //     "create_user_id",
+        //     "create_time",
+        // ])
+        // .select()
+        .countSelect()
+        .then((list) => {
+            res.json({
+                status: "0",
+                msg: "获取列表成功",
+                data: list,
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+            res.json({ status: 1, msg: "登陆异常, 请重新尝试" });
         });
 };
