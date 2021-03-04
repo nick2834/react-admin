@@ -95,6 +95,7 @@ exports.update = (req, res) => {
 
 exports.list = (req, res) => {
     const { pageSize, pageNumber, data } = req.body;
+
     base(tableName)
         .page(Number(pageNumber), Number(pageSize))
         .where(data)
