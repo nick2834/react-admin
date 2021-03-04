@@ -3,15 +3,37 @@
 用户管理
 */
 import React, { Component } from 'react';
-import { Card, Table, Button, Space } from 'antd'
+import { Card, Table, Button, Space, message } from 'antd'
 import { formatTime } from '@/utils/utils';
 import AddUser from './add-user-modal';
-import { userList } from '@/api';
+import { userList, delUser } from '@/api';
 export default class User extends Component {
     state = {
         userList: [],
         pageSize: 10,
-        pageNumber: 1
+        pageNumber: 1,
+        statusList: [
+            {
+                title: "禁用",
+                status: 0
+            },
+            {
+                title: "待审核",
+                status: 1
+            },
+            {
+                title: "审核不通过",
+                status: 2
+            },
+            {
+                title: "审核通过",
+                status: 3
+            },
+            {
+                title: "正常",
+                status: 4
+            },
+        ]
     }
     initColumns = () => {
         this.columns = [
@@ -29,7 +51,7 @@ export default class User extends Component {
                 render: (_, record) => (
                     <Space size="middle">
                         <Button type="primary">权限配置</Button>
-                        <Button type="danger">删除</Button>
+                        <Button type="danger" onClick={() => this.handleDeleteUser(record)}>删除</Button>
                     </Space>
                 )
             }
@@ -38,11 +60,20 @@ export default class User extends Component {
     handleAddUser = () => {
         this.setState({ isUserModal: true })
     }
+    handleDeleteUser = async (user) => {
+        const result = await delUser(user.user_id)
+        if (result.status === "0") {
+            message.success("删除成功")
+            this.getUserList()
+        } else {
+            message.error(result.msg)
+        }
+    }
     handleConfirm = (result) => {
         this.setState({ isUserModal: false })
     }
     componentDidMount() {
-        this.columns = this.initColumns();
+        this.initColumns();
         this.getUserList()
     }
 

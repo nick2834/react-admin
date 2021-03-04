@@ -5,9 +5,9 @@ export const reqLogin = (username, password) =>
 //用户列表
 export const userList = (data) => http.post("/api/users/list", data);
 //增加用户
-export const addUser = (data) => http.post("/api/users/register", data);
+export const addUser = (data) => http.post("/api/users/add", data);
 //删除用户
-export const delUser = (user_id) => http.post(`/api/users/delete/${user_id}`);
+export const delUser = (user_id) => http.delete(`/api/users/delete/${user_id}`);
 //删除用户
 export const updateUser = (data) => http.post(`/api/users/update`, data);
 

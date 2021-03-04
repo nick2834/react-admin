@@ -34,7 +34,7 @@ axios.interceptors.response.use(
         }
     },
     err => {
-
+        message.error("系统故障")
         return Promise.reject(err);
     }
 );

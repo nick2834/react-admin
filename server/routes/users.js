@@ -7,7 +7,8 @@ router.get("/", function(req, res, next) {
 });
 // 登录
 router.post("/login", service.login);
-router.post("/register", service.register);
+router.post("/add", service.add);
 router.post("/update", service.update);
 router.post("/list", service.list);
+router.delete("/delete", service.delete);
 module.exports = router;

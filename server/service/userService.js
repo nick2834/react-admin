@@ -1,6 +1,5 @@
 const { base } = require("../sql/dbConfig");
 const md5 = require("blueimp-md5");
-const moment = require("moment");
 const tableName = "sys_user";
 exports.login = (req, res) => {
     const { username, password } = req.body;
@@ -30,7 +29,7 @@ exports.login = (req, res) => {
         });
 };
 
-exports.register = (req, res) => {
+exports.add = (req, res) => {
     const {
         username,
         password,
@@ -56,7 +55,7 @@ exports.register = (req, res) => {
                 });
             } else {
                 res.json({ status: 1, msg: "此用户已存在" });
-                return new Promise(() => {});
+                return new Promise(() => { });
             }
         })
         .then((user) => {
@@ -122,3 +121,23 @@ exports.list = (req, res) => {
             res.json({ status: 1, msg: "登陆异常, 请重新尝试" });
         });
 };
+//删除
+exports.delete = (req, res) => {
+    const { user_id } = req.params;
+    base(tableName)
+        .where({ user_id })
+        .delete()
+        .then((response) => {
+            base("sys_user_role")
+                .where({ user_id })
+                .delete()
+                .then((res) => {
+                    console.log("sys_user_role", res);
+                });
+            res.json({ status: 0, data: response });
+        })
+        .catch((error) => {
+            console.error("删除异常", error);
+            res.json({ status: 1, msg: "删除用户异常, 请重新尝试" });
+        });
+}
