@@ -35,6 +35,12 @@ class AddUser extends Component {
     onFinish = async(values) => {
         const result = await addUser(values);
         console.log(result)
+        if(result.status === 0){
+            message.success("添加成功")
+            this.props.onConfirm(true)
+        }else{
+            message.error(result.msg)
+        }
     };
     getRoleList = async () => {
         const result = await roleList({ pageSize: 9999 })

@@ -3,10 +3,12 @@
 用户管理
 */
 import React, { Component } from 'react';
-import { Card, Table, Button, Space, message } from 'antd'
+import { Card, Table, Button, Space, message, Modal } from 'antd'
 import { formatTime } from '@/utils/utils';
 import AddUser from './add-user-modal';
 import { userList, delUser } from '@/api';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+const { confirm } = Modal
 export default class User extends Component {
     state = {
         userList: [],
@@ -60,17 +62,27 @@ export default class User extends Component {
     handleAddUser = () => {
         this.setState({ isUserModal: true })
     }
-    handleDeleteUser = async (user) => {
-        const result = await delUser(user.user_id)
-        if (result.status === "0") {
-            message.success("删除成功")
-            this.getUserList()
-        } else {
-            message.error(result.msg)
-        }
+    handleDeleteUser = (user) => {
+        confirm({
+            title: '确定要删除该用户吗？',
+            icon: <ExclamationCircleOutlined />,
+            async onOk() {
+                const result = await delUser(user.user_id)
+                if (result.status === 0) {
+                    message.success("删除成功")
+                    this.getUserList()
+                } else {
+                    message.error(result.msg)
+                }
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+
     }
     handleConfirm = (result) => {
-        this.setState({ isUserModal: false })
+        this.setState({ isUserModal: false }, () => result && this.getUserList())
     }
     componentDidMount() {
         this.initColumns();

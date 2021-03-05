@@ -55,8 +55,8 @@ class Http {
     }
     static delete(api, params) {
         return new Promise((res, rej) => {
-            axios.delete(api, params).then(result => {
-                res(result);
+            axios.delete(api, params).then(({ data }) => {
+                res(data);
             });
         })
     }
