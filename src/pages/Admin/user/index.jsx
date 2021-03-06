@@ -3,11 +3,17 @@
 用户管理
 */
 import React, { Component } from 'react';
-import { Card, Table, Button, Space, message, Modal } from 'antd'
+import { Card, Table, Button, Space, message, Modal, Tag } from 'antd'
 import { formatTime } from '@/utils/utils';
 import AddUser from './add-user-modal';
 import { userList, delUser } from '@/api';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import {
+    CheckCircleOutlined,
+    SyncOutlined,
+    CloseCircleOutlined,
+    ExclamationCircleOutlined,
+    ClockCircleOutlined,
+} from '@ant-design/icons';
 const { confirm } = Modal
 export default class User extends Component {
     state = {
@@ -17,23 +23,33 @@ export default class User extends Component {
         statusList: [
             {
                 title: "禁用",
-                status: 0
+                status: 0,
+                color: "warning",
+                icon: <ExclamationCircleOutlined />
             },
             {
                 title: "待审核",
-                status: 1
+                status: 1,
+                color: "processing",
+                icon: <SyncOutlined spin />
             },
             {
                 title: "审核不通过",
-                status: 2
+                status: 2,
+                color: "error",
+                icon: <CloseCircleOutlined />
             },
             {
                 title: "审核通过",
-                status: 3
+                status: 3,
+                color: "default",
+                icon: <ClockCircleOutlined />
             },
             {
                 title: "正常",
-                status: 4
+                status: 4,
+                color: "success",
+                icon: <CheckCircleOutlined />
             },
         ]
     }
@@ -48,16 +64,28 @@ export default class User extends Component {
                 render: (create_time) => formatTime(create_time, "YYYY-MM-DD HH:mm:ss")
             },
             {
+                title: "状态",
+                dataIndex: 'status',
+                render: (status) => this.statusColumns(status)
+            },
+            {
                 title: "操作",
                 dataIndex: 'action',
                 render: (_, record) => (
                     <Space size="middle">
-                        <Button type="primary">权限配置</Button>
+                        <Button type="primary">编辑</Button>
                         <Button type="danger" onClick={() => this.handleDeleteUser(record)}>删除</Button>
                     </Space>
                 )
             }
         ]
+    }
+    statusColumns = (status) => {
+        const { statusList } = this.state;
+        const { title, color, icon } = statusList.find(item => item.status === status)
+        return (
+            <Tag icon={icon} color={color}>{title}</Tag>
+        )
     }
     handleAddUser = () => {
         this.setState({ isUserModal: true })
