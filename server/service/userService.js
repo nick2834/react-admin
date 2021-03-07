@@ -15,6 +15,11 @@ exports.login = (req, res) => {
                 //sys_role  role_id menus
                 //sys_user_role user_id role_id
                 //sys_user user_id
+                if(user.status === 0){
+                    res.json({ status: 1, msg: "该用户已被禁用" });
+                    return new Promise(() => {}); 
+                }
+
                 if (user.username === "admin") {
                     delete user.password;
                     user.menus = `["/home","/article","/category","/articles","/user","/role"]`;
