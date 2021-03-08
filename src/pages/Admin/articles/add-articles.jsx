@@ -62,7 +62,7 @@ export default class AddArticles extends Component {
         const title = (
             <PageHeader
                 style={{ padding: 0 }}
-                onBack={() => this.props.history.goBack()}
+                onBack={() => this.props.history.goBack()} 
                 title="返回"
             />
         )
@@ -70,18 +70,10 @@ export default class AddArticles extends Component {
             <div>
                 <Card title={title}>
                     <Form>
-                        <Form.Item
-                            label="文章标题"
-                            name="title"
-                            rules={[{ required: true, message: 'Please input your username!' }]}
-                        >
+                        <Form.Item label="文章标题" name="title" rules={[{ required: true, message: 'Please input your username!' }]} >
                             <Input style={{ width: "500px" }} />
                         </Form.Item>
-                        <Form.Item
-                            label="文章分类"
-                            name="category"
-                            rules={[{ required: true, message: 'Please input your username!' }]}
-                        >
+                        <Form.Item label="文章分类" name="category" rules={[{ required: true, message: 'Please input your username!' }]} >
                             <Cascader options={options} onChange={this.onChange} placeholder="Please select" style={{ width: "500px" }} />
                         </Form.Item>
                         <Form.Item label="文章内容" name="content" rules={[{ required: true }]}>
