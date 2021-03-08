@@ -15,9 +15,9 @@ exports.login = (req, res) => {
                 //sys_role  role_id menus
                 //sys_user_role user_id role_id
                 //sys_user user_id
-                if(user.status === 0){
+                if (user.status === 0) {
                     res.json({ status: 1, msg: "该用户已被禁用" });
-                    return new Promise(() => {}); 
+                    return new Promise(() => {});
                 }
 
                 if (user.username === "admin") {
@@ -144,4 +144,24 @@ exports.delete = (req, res) => {
             console.error("删除异常", error);
             res.json({ status: 1, msg: "删除用户异常, 请重新尝试" });
         });
+};
+
+exports.select = async(req, res) => {
+    const { user_id } = req.params;
+    const user = await base(
+        `SELECT u.user_id,u.username,u.email,u.mobile,u.status,r.role_name,r.role_id FROM sys_user_role ur 
+        LEFT JOIN sys_user u ON u.user_id = ur.user_id 
+        LEFT JOIN sys_role r ON r.role_id = ur.role_id 
+        WHERE u.user_id=${user_id}
+        `,
+        false
+    );
+    if (user && user.length) {
+        res.json({
+            status: 0,
+            data: user[0],
+        });
+    } else {
+        res.json({ status: 1, msg: "查询用户异常, 请重新尝试" });
+    }
 };

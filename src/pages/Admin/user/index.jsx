@@ -5,8 +5,8 @@
 import React, { Component } from 'react';
 import { Card, Table, Button, Space, message, Modal, Tag } from 'antd'
 import { formatTime } from '@/utils/utils';
-import AddUser from './add-user-modal';
-import { userList, delUser } from '@/api';
+import AddUpdateUser from './add-update-user-modal';
+import { userList, delUser, selectUser } from '@/api';
 import {
     CheckCircleOutlined,
     SyncOutlined,
@@ -73,7 +73,7 @@ export default class User extends Component {
                 dataIndex: 'action',
                 render: (_, record) => (
                     <Space size="middle">
-                        <Button type="primary">编辑</Button>
+                        <Button type="primary" onClick={() => this.handleEditUser(record)}>编辑</Button>
                         <Button type="danger" onClick={() => this.handleDeleteUser(record)}>删除</Button>
                     </Space>
                 )
@@ -88,7 +88,20 @@ export default class User extends Component {
         )
     }
     handleAddUser = () => {
-        this.setState({ isUserModal: true })
+        this.setState({ initUser: null, isUserModal: true })
+    }
+    handleEditUser = async (user) => {
+        const { statusList } = this.state;
+        const initUser = await selectUser(user.user_id);
+        console.log(initUser)
+        if (initUser.status === 0) {
+            const users = initUser.data;
+            const { title } = statusList.find(item => item.status === users.status)
+            users.statusTitle = title;
+            this.setState({ isUserModal: true, initUser: users })
+        } else {
+            message.msg(initUser.msg)
+        }
     }
     handleDeleteUser = (user) => {
         confirm({
@@ -134,7 +147,7 @@ export default class User extends Component {
         }
     }
     render() {
-        const { userList, isUserModal, pagination } = this.state;
+        const { userList, isUserModal, pagination, initUser, statusList } = this.state;
         const title = (
             <span className="card_title">
                 <Button type="primary" style={{ marginRight: '10px' }} onClick={this.handleAddUser}>新增用户</Button>
@@ -152,7 +165,7 @@ export default class User extends Component {
                     ></Table>
                 </Card>
 
-                <AddUser isUserModal={isUserModal} onConfirm={this.handleConfirm} />
+                <AddUpdateUser isUserModal={isUserModal} onConfirm={this.handleConfirm} initUser={initUser} statusList={statusList} />
             </div>
         )
     }

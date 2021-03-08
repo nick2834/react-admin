@@ -11,11 +11,35 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 04/03/2021 17:50:09
+ Date: 08/03/2021 17:29:17
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for article
+-- ----------------------------
+DROP TABLE IF EXISTS `article`;
+CREATE TABLE `article`  (
+  `id` bigint(0) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) CHARACTER SET utf32 COLLATE utf32_general_ci NULL DEFAULT NULL COMMENT '文章标题',
+  `user_id` bigint(0) UNSIGNED NOT NULL DEFAULT 1 COMMENT '用户ID',
+  `cover_image` varchar(2550) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文章封面图片',
+  `content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '文章内容',
+  `top` tinyint(1) NULL DEFAULT 0 COMMENT '是否置顶',
+  `type_id` bigint(0) UNSIGNED NOT NULL COMMENT '类型',
+  `status` int(0) UNSIGNED NULL DEFAULT NULL COMMENT '状态',
+  `description` varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '文章简介，最多200字',
+  `keywords` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文章关键字，优化搜索',
+  `comment` tinyint(0) UNSIGNED NULL DEFAULT 1 COMMENT '是否开启评论',
+  `create_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
+  `update_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  `subtitle` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '副标题',
+  `author` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '作者',
+  `release_time` datetime(0) NULL DEFAULT NULL COMMENT '发布时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 300555270 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -47,13 +71,13 @@ CREATE TABLE `sys_role`  (
   `create_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`role_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 121258025 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 121258026 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES (121258023, 'admin2', '最高权限管理员', 125794946, 'admin', '[\"/home\",\"/article\",\"/category\",\"/articles\",\"/user\",\"/role\"]', '2021-03-04 15:58:10', '2021-03-04 15:59:17');
 INSERT INTO `sys_role` VALUES (121258024, 'editor', '编辑', 125794946, 'admin', '[\"/home\",\"/articles\",\"/category\",\"/article\"]', '2021-03-04 16:00:45', '2021-03-04 16:00:49');
+INSERT INTO `sys_role` VALUES (121258025, 'admin', '管理员', 125794948, 'zhangsan', '[\"/home\",\"/article\",\"/category\",\"/articles\",\"/user\",\"/role\"]', '2021-03-05 14:55:56', '2021-03-05 15:06:53');
 
 -- ----------------------------
 -- Table structure for sys_role_menu
@@ -81,16 +105,14 @@ CREATE TABLE `sys_user`  (
   `create_user_id` bigint(0) NULL DEFAULT NULL COMMENT '创建者ID',
   `create_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`user_id`) USING BTREE,
-  UNIQUE INDEX `username`(`username`) USING BTREE,
-  UNIQUE INDEX `email`(`email`) USING BTREE,
-  UNIQUE INDEX `phone`(`mobile`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 125794948 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统用户' ROW_FORMAT = Dynamic;
+  UNIQUE INDEX `username`(`username`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 125794957 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统用户' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (125794946, 'admin', '21232f297a57a5a743894a0e4a801fc3', NULL, '21231@ti.co', '13800138789', 4, NULL, '2021-03-03 17:14:40');
-INSERT INTO `sys_user` VALUES (125794947, 'nickx', '5e543256c480ac577d30f76f9120eb74', NULL, '28389@q.c', '13800138000', 4, NULL, '2021-03-04 17:19:56');
+INSERT INTO `sys_user` VALUES (125794953, 'admin', 'e10adc3949ba59abbe56e057f20f883e', NULL, '28389@q.c', '13800138000', 4, NULL, '2021-03-05 15:00:59');
+INSERT INTO `sys_user` VALUES (125794956, 'zhangsan', 'e10adc3949ba59abbe56e057f20f883e', NULL, '2838219@co.com', '13800138000', 4, NULL, '2021-03-05 15:07:58');
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -101,6 +123,12 @@ CREATE TABLE `sys_user_role`  (
   `user_id` bigint(0) NULL DEFAULT NULL COMMENT '用户ID',
   `role_id` bigint(0) NULL DEFAULT NULL COMMENT '角色ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 125974430 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户与角色对应关系' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 125974436 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户与角色对应关系' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_user_role
+-- ----------------------------
+INSERT INTO `sys_user_role` VALUES (125974432, 125794953, 121258025);
+INSERT INTO `sys_user_role` VALUES (125974435, 125794956, 121258024);
 
 SET FOREIGN_KEY_CHECKS = 1;

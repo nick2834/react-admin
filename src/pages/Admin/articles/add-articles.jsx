@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Form, Input, Cascader } from 'antd';
+import { Card, Form, Input, Cascader, PageHeader } from 'antd';
 import 'braft-editor/dist/index.css';
 import BraftEditor from 'braft-editor'
 
@@ -59,23 +59,30 @@ export default class AddArticles extends Component {
                 ],
             },
         ];
+        const title = (
+            <PageHeader
+                style={{ padding: 0 }}
+                onBack={() => this.props.history.goBack()}
+                title="返回"
+            />
+        )
         return (
             <div>
-                <Card >
+                <Card title={title}>
                     <Form>
                         <Form.Item
                             label="文章标题"
                             name="title"
                             rules={[{ required: true, message: 'Please input your username!' }]}
                         >
-                            <Input style={{width:"500px"}}/>
+                            <Input style={{ width: "500px" }} />
                         </Form.Item>
                         <Form.Item
                             label="文章分类"
                             name="category"
                             rules={[{ required: true, message: 'Please input your username!' }]}
                         >
-                            <Cascader options={options} onChange={this.onChange} placeholder="Please select"  style={{width:"500px"}}/>
+                            <Cascader options={options} onChange={this.onChange} placeholder="Please select" style={{ width: "500px" }} />
                         </Form.Item>
                         <Form.Item label="文章内容" name="content" rules={[{ required: true }]}>
                             <BraftEditor

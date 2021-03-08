@@ -41,8 +41,8 @@ axios.interceptors.response.use(
 class Http {
     static get(api, param) {
         return new Promise((res, rej) => {
-            axios.get(api, param).then(result => {
-                res(result);
+            axios.get(api, param).then(({ data }) => {
+                res(data);
             });
         })
     }

@@ -10,6 +10,8 @@ export const addUser = (data) => http.post("/api/users/add", data);
 export const delUser = (user_id) => http.delete(`/api/users/delete/${user_id}`);
 //删除用户
 export const updateUser = (data) => http.post(`/api/users/update`, data);
+//查找用户
+export const selectUser = (user_id) => http.get(`/api/users/select/${user_id}`);
 
 //权限列表
 export const roleList = (data) => http.post("/api/role/list", data);

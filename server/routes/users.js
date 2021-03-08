@@ -11,4 +11,5 @@ router.post("/add", service.add);
 router.post("/update", service.update);
 router.post("/list", service.list);
 router.delete("/delete/:user_id", service.delete);
+router.get("/select/:user_id", service.select);
 module.exports = router;
