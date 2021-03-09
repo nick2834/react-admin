@@ -4,7 +4,15 @@ import { PlusOutlined } from '@ant-design/icons';
 
 export default class ArticlsList extends Component {
     state = {
-        articlesList: []
+        articlesList: [
+            {
+                key: '1',
+                name: 'John Brown',
+                age: 32,
+                address: 'New York No. 1 Lake Park',
+            }
+        ],
+        selectedRowKeys: []
     }
     handleAddArticle = () => {
         this.props.history.push('/articles/add')
@@ -25,11 +33,19 @@ export default class ArticlsList extends Component {
             },
         ]
     }
-    componentDidMount() {
+    UNSAFE_componentWillMount() {
         this.initColmuns()
     }
+    onSelectChange = selectedRowKeys => {
+        console.log('selectedRowKeys changed: ', selectedRowKeys);
+        this.setState({ selectedRowKeys });
+    }
     render() {
-        const { articlesList } = this.state;
+        const { articlesList, selectedRowKeys } = this.state;
+        const rowSelection = {
+            selectedRowKeys,
+            onChange: this.onSelectChange,
+        }
         const title = (
             <span className="card_title">
                 <Button type="primary" style={{ marginRight: '10px' }} icon={<PlusOutlined />} onClick={this.handleAddArticle}>新增文章</Button>
@@ -40,7 +56,8 @@ export default class ArticlsList extends Component {
                 <Card title={title}>
                     <Table
                         bordered
-                        rowKey='id'
+                        rowKey='key'
+                        rowSelection={rowSelection}
                         columns={this.colmuns}
                         dataSource={articlesList}
                     ></Table>

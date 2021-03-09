@@ -60,11 +60,7 @@ export default class AddArticles extends Component {
             },
         ];
         const title = (
-            <PageHeader
-                style={{ padding: 0 }}
-                onBack={() => this.props.history.goBack()} 
-                title="返回"
-            />
+            <PageHeader style={{ padding: 0 }} onBack={() => this.props.history.goBack()}  title="返回" />
         )
         return (
             <div>
