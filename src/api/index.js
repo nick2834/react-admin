@@ -21,3 +21,5 @@ export const addRole = (data) => http.post("/api/role/add", data);
 export const updateRole = (data) => http.post("/api/role/update", data);
 //删除权限
 export const delRole = (role_id) => http.post(`/api/role/delete/${role_id}`);
+
+export const categoryList = (data) => http.post("/api/category/list", data);

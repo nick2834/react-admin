@@ -20,6 +20,7 @@ export default class User extends Component {
         userList: [],
         pageSize: 10,
         pageNumber: 1,
+        loading: true,
         statusList: [
             {
                 title: "禁用",
@@ -139,6 +140,7 @@ export default class User extends Component {
                 total: count,
                 userList: data,
                 pageNumber: page,
+                loading: false,
                 pagination: {
                     defaultPageSize: pageSize,
                     total: count
@@ -147,7 +149,7 @@ export default class User extends Component {
         }
     }
     render() {
-        const { userList, isUserModal, pagination, initUser, statusList } = this.state;
+        const { userList, isUserModal, pagination, initUser, statusList,loading } = this.state;
         const title = (
             <span className="card_title">
                 <Button type="primary" style={{ marginRight: '10px' }} onClick={this.handleAddUser}>新增用户</Button>
@@ -157,6 +159,7 @@ export default class User extends Component {
             <div className="container">
                 <Card title={title}>
                     <Table
+                        loading={loading}
                         bordered
                         rowKey='user_id'
                         dataSource={userList}

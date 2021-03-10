@@ -12,7 +12,8 @@ export default class Role extends Component {
         pageSize: 10,
         pageNumber: 1,
         roleList: [],
-        role: null
+        role: null,
+        loading: true,
     }
 
     initColumns = () => {
@@ -54,6 +55,7 @@ export default class Role extends Component {
                 total: count,
                 roleList: data,
                 pageNumber: page,
+                loading: false,
                 pagination: {
                     defaultPageSize: pageSize,
                     total: count
@@ -97,7 +99,7 @@ export default class Role extends Component {
     }
     //配置权限窗口控制
     render() {
-        const { roleList, pagination, role, isModalVisible, isAuthModal } = this.state;
+        const { roleList, pagination, role, isModalVisible, isAuthModal,loading } = this.state;
         const title = (
             <span className="card_title">
                 <Button type="primary" style={{ marginRight: '10px' }} onClick={this.handleAddRole}>创建角色</Button>
@@ -108,6 +110,7 @@ export default class Role extends Component {
                 <Card title={title}>
                     <Table
                         bordered
+                        loading={loading}
                         rowKey='role_id'
                         dataSource={roleList}
                         columns={this.columns}

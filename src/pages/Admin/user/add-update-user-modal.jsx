@@ -97,7 +97,7 @@ class AddUser extends Component {
                         </Select>
                     </Form.Item>
                     <Form.Item name="status" label="状态" rules={[{ required: true, message: '请配置权限' }]} initialValue={initUser ? initUser.status : ""}>
-                        <Select placeholder="请选择账号状态" value={initUser ? { key: initUser.status, label: initUser.statusTitle } : ''}>
+                        <Select placeholder="请选择账号状态" value={initUser ? { key: initUser.status, label: initUser.statusTitle } : null}>
                             {
                                 statusList.map((item) => {
                                     return (

@@ -1,19 +1,29 @@
 import React, { Component } from 'react';
 import { Card, Button, Table } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-const data = [];
-for (let i = 0; i < 5; i++) {
-    data.push({
-        key: i,
-        name: `Edward King ${i}`,
-    });
-}
+import { PlusOutlined, RightOutlined } from '@ant-design/icons';
+
+import { categoryList } from '@/api'
 export default class Category extends Component {
+    state = {
+        categoryList: [],
+        pageSize: 10,
+        pageNumber: 1,
+        parentId: '0',
+        parentName: '',
+    }
     initColumns = () => {
         this.columns = [
             {
-                title: '分类的名称',
+                title: 'ID',
+                dataIndex: 'id', // 显示数据对应的属性名
+            },
+            {
+                title: '分类名称',
                 dataIndex: 'name', // 显示数据对应的属性名
+            },
+            {
+                title: '分类描述',
+                dataIndex: 'description', // 显示数据对应的属性名
             },
             {
                 title: '操作',
@@ -32,14 +42,51 @@ export default class Category extends Component {
     handleClick = () => {
 
     }
-    render() {
+    getCategoryList = async () => {
+        const { pageSize, pageNumber } = this.state;
+        const result = await categoryList({ pageSize, pageNumber });
+        if (result.status === "0") {
+            const { count, data, page } = result.data;
+            this.setState({
+                total: count,
+                categoryList: data,
+                pageNumber: page,
+                pagination: {
+                    defaultPageSize: pageSize,
+                    total: count
+                }
+            })
+        }
+    }
+    componentDidMount() {
         this.initColumns()
+        this.getCategoryList()
+    }
+    render() {
+        const { categoryList, parentId, parentName } = this.state;
+        const title = parentId === '0' ? '一级分类列表' : (
+            <span>
+                <Button type="link" onClick={this.showCategorys} icon={<RightOutlined />}>一级分类列表</Button>
+                <span>{parentName}</span>
+            </span>
+        )
+        // Card的右侧
+        const extra = (
+            <Button type='primary' icon={<PlusOutlined />}>添加</Button>
+        )
+
         return (
             <div className="container">
-                <Card title="分类列表" extra={<Button type="primary" onClick={this.handleClick} icon={<PlusOutlined />}>添加分类</Button>} style={{ width: '100%' }}>
-                    <Table size="small" bordered columns={this.columns} dataSource={data} />
+                <Card title={title} extra={extra} style={{ width: '100%' }}>
+                    <Table
+                        size="small"
+                        rowKey="id"
+                        bordered
+                        columns={this.columns}
+                        dataSource={categoryList}
+                    />
                 </Card>
-            </div>
+            </div >
         )
     }
 }
