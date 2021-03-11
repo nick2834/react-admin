@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 10/03/2021 16:30:02
+ Date: 11/03/2021 16:59:18
 */
 
 SET NAMES utf8mb4;
@@ -47,7 +47,7 @@ CREATE TABLE `article`  (
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category`  (
   `id` bigint(0) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `pid` bigint(0) UNSIGNED NULL DEFAULT NULL,
+  `pid` bigint(0) UNSIGNED NULL DEFAULT 0,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文章类型名',
   `description` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '类型介绍',
   `sort` int(0) NULL DEFAULT NULL COMMENT '排序',
@@ -57,13 +57,16 @@ CREATE TABLE `category`  (
   `update_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `url` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 287 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 300 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of category
 -- ----------------------------
-INSERT INTO `category` VALUES (287, NULL, '前端', '前端开发', NULL, NULL, 1, '2021-03-10 15:23:20', '2021-03-10 15:23:20', NULL);
-INSERT INTO `category` VALUES (288, 287, 'NodeJS', 'nodejs', NULL, NULL, 1, '2021-03-10 16:14:19', '2021-03-10 16:14:19', NULL);
+INSERT INTO `category` VALUES (294, 0, '前端工程', '前端', NULL, NULL, 1, '2021-03-11 14:49:29', '2021-03-11 14:49:29', NULL);
+INSERT INTO `category` VALUES (295, 294, 'Nodejs', 'Nodejs', NULL, NULL, 1, '2021-03-11 14:49:40', '2021-03-11 14:49:40', NULL);
+INSERT INTO `category` VALUES (296, 294, 'Javascript', 'Javascript', NULL, NULL, 1, '2021-03-11 14:50:35', '2021-03-11 14:50:35', NULL);
+INSERT INTO `category` VALUES (297, 0, '散文学', '散文学', NULL, NULL, 1, '2021-03-11 14:50:51', '2021-03-11 14:50:51', NULL);
+INSERT INTO `category` VALUES (298, 297, '诗词', '诗词', NULL, NULL, 1, '2021-03-11 14:51:00', '2021-03-11 14:51:00', NULL);
 
 -- ----------------------------
 -- Table structure for sys_menu
