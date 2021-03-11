@@ -23,3 +23,9 @@ export const updateRole = (data) => http.post("/api/role/update", data);
 export const delRole = (role_id) => http.post(`/api/role/delete/${role_id}`);
 
 export const categoryList = (data) => http.post("/api/category/list", data);
+
+export const typelist = () => http.get("/api/category/typelist");
+
+export const addCate = (data) => http.post("/api/category/add", data);
+
+export const delCate = (data) => http.post("/api/category/delete", data);

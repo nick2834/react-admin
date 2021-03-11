@@ -6,7 +6,8 @@ router.get("/", function(req, res, next) {
     res.send("respond with a resource");
 });
 router.post("/list", service.list);
+router.get("/typelist", service.lists);
 router.post("/add", service.add);
-router.post("/del/:id", service.del);
+router.post("/delete", service.del);
 router.post("/update", service.update);
 module.exports = router;

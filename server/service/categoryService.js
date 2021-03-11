@@ -3,9 +3,10 @@ const tableName = "category";
 // 列表
 exports.list = (req, res) => {
     const { pageSize, pageNumber, data } = req.body;
+    //   sort 筛选
     base(tableName)
+        .where(data ? data : { pid: 0 }) //筛选一二级分类
         .page(Number(pageNumber), Number(pageSize))
-        .where(data)
         .countSelect()
         .then((list) => {
             res.json({
@@ -19,10 +20,26 @@ exports.list = (req, res) => {
             res.json({ status: 1, msg: "数据异常, 请重新尝试" });
         });
 };
-exports.add = (req, res) => {
-    const { name, mainKey } = req.body;
+
+exports.lists = (req, res) => {
     base(tableName)
-        .thenAdd({ name, mainKey }, { name }, true)
+        .select()
+        .then((list) => {
+            res.json({
+                status: "0",
+                msg: "获取列表成功",
+                data: list,
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+            res.json({ status: 1, msg: "数据异常, 请重新尝试" });
+        });
+};
+exports.add = (req, res) => {
+    const data = req.body;
+    base(tableName)
+        .thenAdd(data, { name: data.name }, true)
         .then((data) => {
             res.json({
                 status: `${data.type == "add" ? "0" : "1"}`,
@@ -32,18 +49,24 @@ exports.add = (req, res) => {
         });
 };
 // 删除
-exports.del = (req, res, next) => {
-    const { id } = req.params;
+exports.del = (req, res) => {
+    const { id, pid } = req.body;
+    /**
+     * pid 为0 一级分类
+     * pid 不为0 二级分类
+     */
     base(tableName)
-        .where({ cid: id })
+        .where({ id })
         .delete()
-        .then((data) => {
-            // 1 删除成功
-            // 0 删除失败 或 不存在该数据
+        .then(async(data) => {
+            await base(tableName).where({ pid: id }).delete();
             res.json({
                 status: data == 0 ? "1" : "0",
                 msg: `${data == 0 ? "删除失败" : "删除成功"}`,
             });
+        })
+        .catch((error) => {
+            res.json({ status: 1, msg: "删除数据异常, 请重新尝试" });
         });
 };
 // 修改
