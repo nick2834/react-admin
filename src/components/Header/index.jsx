@@ -59,7 +59,7 @@ class MHeader extends Component {
         const { collapsed } = this.props;
         return (
             <Header className="header">
-                <div className="left">
+                <div className="left flex">
                     <span className="toggle">
                         {
                             collapsed ?
@@ -71,12 +71,13 @@ class MHeader extends Component {
                         this.getBreadCrumbPath()
                     }
                 </div>
-
-                <Dropdown overlay={menu}>
-                    <a className="ant-dropdown-link" onClick={e => e.preventDefault()} href="javacript:void(0);">
-                        欢迎： {username} <DownOutlined />
-                    </a>
-                </Dropdown>
+                <div className="right flex">
+                    <Dropdown overlay={menu}>
+                        <a className="ant-dropdown-link" onClick={e => e.preventDefault()} href="javacript:void(0);">
+                            欢迎： {username} <DownOutlined />
+                        </a>
+                    </Dropdown>
+                </div>
             </Header>
         )
     }
