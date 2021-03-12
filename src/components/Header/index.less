@@ -4,13 +4,26 @@
   justify-content: space-between;
   align-items: center;
   padding-left: 0;
+  height: var(--defaultHeight);
+  line-height: var(--defaultHeight);
+  .left {
+    display: flex;
+    align-items: center;
+  }
+  .toggle {
+    margin-right: 10px;
+    &:hover{
+      background: rgba(0,0,0,.025);
+    }
+  }
   .trigger {
-    padding: 0 24px;
-    font-size: 18px;
-    line-height: 64px;
+    padding: 0px 15px;
+    font-size: 16px;
+    line-height: var(--defaultHeight);
     cursor: pointer;
     transition: color 0.3s;
-    &:hover{
+    
+    &:hover {
       color: #1890ff;
     }
   }

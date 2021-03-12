@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Card, Form, Input, PageHeader, TreeSelect } from 'antd';
+import { Card, Form, Input, PageHeader, TreeSelect, Button, Row, Col, Upload } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { typelist } from '@/api';
 import 'braft-editor/dist/index.css';
 import BraftEditor from 'braft-editor'
@@ -8,7 +9,8 @@ const { TreeNode } = TreeSelect;
 export default class AddArticles extends Component {
     state = {
         editorState: BraftEditor.createEditorState('<p>Hello <b>World!</b></p>'), // 设置编辑器初始内容
-        outputHTML: '<p></p>'
+        outputHTML: '<p></p>',
+        fileList: []
     }
     initOptions = () => {
 
@@ -71,28 +73,63 @@ export default class AddArticles extends Component {
     handleSelect = (value) => {
         console.log(value)
     }
+    handleUploadChange = () =>{
+
+    }
     render() {
-        const { editorState, outputHTML } = this.state
+        const { editorState, outputHTML,fileList } = this.state;
         const title = (
             <PageHeader style={{ padding: 0 }} onBack={() => this.props.history.goBack()} title="返回" />
         )
+        const uploadButton = (
+            <div>
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+            </div>
+        );
         return (
             <div>
                 <Card title={title}>
                     <Form>
-                        <Form.Item label="文章标题" name="title" rules={[{ required: true, message: 'Please input your username!' }]} >
-                            <Input style={{ width: "500px" }} />
-                        </Form.Item>
-                        <Form.Item label="文章分类" name="category" rules={[{ required: true, message: 'Please input your username!' }]} >
-                            <TreeSelect
-                                placeholder="请选择文章分类"
-                                multiple
-                                treeDefaultExpandAll
-                                onChange={this.handleSelect}
-                            >
-                                {this.treeNodes}
-                            </TreeSelect>
-                        </Form.Item>
+                        <Row>
+                            <Col span={12}>
+                                <Form.Item label="文章标题" name="title" rules={[{ required: true }]} >
+                                    <Input style={{ width: "90%" }} />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item label="副标题" name="subTttle" rules={[{ required: true }]} >
+                                    <Input style={{ width: "90%" }} />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item label="文章分类" name="category" rules={[{ required: true }]} >
+                                    <TreeSelect
+                                        style={{ width: "90%" }}
+                                        placeholder="请选择文章分类"
+                                        multiple
+                                        treeDefaultExpandAll
+                                        onChange={this.handleSelect}
+                                    >
+                                        {this.treeNodes}
+                                    </TreeSelect>
+                                </Form.Item>
+                            </Col>
+                            <Col span={24}>
+                                <Form.Item label="文章封面" name="cover_image">
+                                    <Upload
+                                        action="http://localhost:5000/api/qiniu/upload"
+                                        listType="picture-card"
+                                        fileList={fileList}
+                                        onPreview={this.handlePreview}
+                                        onChange={this.handleUploadChange}
+                                    >
+                                        {fileList.length >= 8 ? null : uploadButton}
+                                    </Upload>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
                         <Form.Item label="文章内容" name="content" rules={[{ required: true }]}>
                             <BraftEditor
                                 className="editor"
@@ -100,7 +137,9 @@ export default class AddArticles extends Component {
                                 onChange={this.handleChange}
                             />
                         </Form.Item>
-
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit">保存</Button>
+                        </Form.Item>
                     </Form>
                     <h5>输出内容</h5>
                     <div className="output-content">{outputHTML}</div>

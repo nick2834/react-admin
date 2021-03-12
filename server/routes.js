@@ -5,6 +5,7 @@ var usersRouter = require("./routes/users");
 var articleRouter = require("./routes/article");
 var cateRouter = require("./routes/category");
 var roleRouter = require("./routes/roles");
+var qiniuupload = require("./routes/upload");
 // https://github.com/LFB/nodejs-koa-blog/blob/770810e21130f3d910067b9139d95589a4e33118/core/init.js#L5
 class InitManager {
     static initCore(app) {
@@ -29,6 +30,7 @@ class InitManager {
         InitManager.app.use("/api/article", articleRouter);
         InitManager.app.use("/api/category", cateRouter);
         InitManager.app.use("/api/role", roleRouter);
+        InitManager.app.use("/api/qiniu", qiniuupload);
     }
 }
 

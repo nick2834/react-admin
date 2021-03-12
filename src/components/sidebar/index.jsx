@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Menu } from 'antd';
 import './index.less';
-import logo from '@/assets/images/logo.png';
+// import logo from '@/assets/images/logo.png';
 import MenuList from '@/config/menuConfig';
 import memoryUtils from '@/utils/memoryUtils';
 const { SubMenu } = Menu;
@@ -58,9 +58,9 @@ class Sidebar extends Component {
         const openKey = this.openKey;
         return (
             <div className="side_bar">
-                <div className="logo" >
+                {/* <div className="logo" >
                     <img src={logo} alt="" />
-                </div>
+                </div> */}
                 <Menu
                     selectedKeys={[path]}
                     defaultOpenKeys={[openKey]}

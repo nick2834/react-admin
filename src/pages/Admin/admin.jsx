@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { Redirect, Switch, Route } from 'react-router-dom';
-import { Layout, Breadcrumb } from 'antd';
-import { HomeOutlined } from "@ant-design/icons";
+import { Layout } from 'antd';
 import Header from '@/components/Header';
 import Sidebar from '@/components/sidebar';
 import memoryUtils from '@/utils/memoryUtils';
-import menuList from '@/config/menuConfig';
 
 import Home from './home';
 import Category from './category';
@@ -20,32 +18,6 @@ export default class Admin extends Component {
         this.state = {
             collapsed: false
         }
-    }
-    getBreadCrumbPath = () => {
-        const path = this.props.location.pathname;
-        let routePath;
-        path !== '/home' && menuList.forEach((item) => {
-            if (item.key === path) {
-                routePath = item
-            } else if (item.children) {
-                const cItem = item.children.find(cItem => cItem.key === path)
-                if (cItem) {
-                    routePath = cItem
-                }
-            }
-        })
-        return (
-            <Breadcrumb style={{ margin: '16px 0' }}>
-                <Breadcrumb.Item href="/home">
-                    <HomeOutlined />
-                    <span>首页</span>
-                </Breadcrumb.Item>
-                {
-                    routePath && routePath.title ? <Breadcrumb.Item><span>{routePath.title}</span></Breadcrumb.Item> : ''
-                }
-
-            </Breadcrumb>
-        )
     }
     toggle = (collapsed) => {
         this.setState({ collapsed });
@@ -63,10 +35,7 @@ export default class Admin extends Component {
                 </Sider>
                 <Layout>
                     <Header collapsed={collapsed} changeToggle={(collapsed) => this.toggle(collapsed)} />
-                    <Content style={{ margin: '0 16px' }}>
-                        {
-                            this.getBreadCrumbPath()
-                        }
+                    <Content style={{ margin: 20 }}>
                         <div className="main_container">
                             <Switch>
                                 <Route path='/home' component={Home}></Route>

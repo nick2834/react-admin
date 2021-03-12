@@ -876,7 +876,7 @@ pump@^3.0.0:
     end-of-stream "^1.1.0"
     once "^1.3.1"
 
-qiniu@^7.3.0:
+qiniu@^7.3.2:
   version "7.3.2"
   resolved "https://registry.npm.taobao.org/qiniu/download/qiniu-7.3.2.tgz#2655ffc65396272b4b1aaa8588aa7b1cc167d3cb"
   integrity sha1-JlX/xlOWJytLGqqFiKp7HMFn08s=

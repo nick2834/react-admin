@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Layout, Menu, Dropdown, Modal } from 'antd';
+import { Layout, Menu, Dropdown, Modal, Breadcrumb } from 'antd';
 import { DownOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import memoryUtils from '@/utils/memoryUtils';
 import storageUtils from '@/utils/storageUtils';
 import './index.less';
+import menuList from '@/config/menuConfig';
 
 const { Header } = Layout
 class MHeader extends Component {
@@ -24,6 +25,29 @@ class MHeader extends Component {
         const { collapsed } = this.props;
         this.props.changeToggle(collapsed ? false : true)
     }
+    getBreadCrumbPath = () => {
+        const path = this.props.location.pathname;
+        let routePath;
+        path !== '/home' && menuList.forEach((item) => {
+            if (item.key === path) {
+                routePath = item
+            } else if (item.children) {
+                const cItem = item.children.find(cItem => cItem.key === path)
+                if (cItem) {
+                    routePath = cItem
+                }
+            }
+        })
+        return (
+            <Breadcrumb style={{ margin: '16px 0' }}>
+                <Breadcrumb.Item href="/">首页</Breadcrumb.Item>
+                {
+                    routePath && routePath.title ? <Breadcrumb.Item><span>{routePath.title}</span></Breadcrumb.Item> : ''
+                }
+
+            </Breadcrumb>
+        )
+    }
     render() {
         const menu = (
             <Menu>
@@ -35,11 +59,19 @@ class MHeader extends Component {
         const { collapsed } = this.props;
         return (
             <Header className="header">
-                {
-                    collapsed ?
-                        <MenuUnfoldOutlined className="trigger" onClick={this.toggle} /> :
-                        <MenuFoldOutlined className="trigger" onClick={this.toggle} />
-                }
+                <div className="left">
+                    <span className="toggle">
+                        {
+                            collapsed ?
+                                <MenuUnfoldOutlined className="trigger" onClick={this.toggle} /> :
+                                <MenuFoldOutlined className="trigger" onClick={this.toggle} />
+                        }
+                    </span>
+                    {
+                        this.getBreadCrumbPath()
+                    }
+                </div>
+
                 <Dropdown overlay={menu}>
                     <a className="ant-dropdown-link" onClick={e => e.preventDefault()} href="javacript:void(0);">
                         欢迎： {username} <DownOutlined />
