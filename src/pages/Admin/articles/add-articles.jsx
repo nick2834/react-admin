@@ -73,11 +73,11 @@ export default class AddArticles extends Component {
     handleSelect = (value) => {
         console.log(value)
     }
-    handleUploadChange = () =>{
+    handleUploadChange = () => {
 
     }
     render() {
-        const { editorState, outputHTML,fileList } = this.state;
+        const { editorState, outputHTML, fileList } = this.state;
         const title = (
             <PageHeader style={{ padding: 0 }} onBack={() => this.props.history.goBack()} title="返回" />
         )
