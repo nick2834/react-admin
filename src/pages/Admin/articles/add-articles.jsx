@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card, Form, Input, PageHeader, TreeSelect, Button, Row, Col, Upload } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { typelist } from '@/api';
+import { typelist, uploadFile } from '@/api';
 import 'braft-editor/dist/index.css';
 import BraftEditor from 'braft-editor'
 
@@ -73,8 +73,15 @@ export default class AddArticles extends Component {
     handleSelect = (value) => {
         console.log(value)
     }
-    handleUploadChange = () => {
-
+    handleUploadChange = (options) =>{
+        
+    }
+    customRequest = async (options) => {
+        const { onSuccess, onError, file, onProgress } = options;
+        console.log(file)
+        let formdata = new FormData()
+        formdata.append('file', file)
+        await uploadFile(formdata)
     }
     render() {
         const { editorState, outputHTML, fileList } = this.state;

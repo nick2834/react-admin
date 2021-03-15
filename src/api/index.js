@@ -29,3 +29,5 @@ export const typelist = () => http.get("/api/category/typelist");
 export const addCate = (data) => http.post("/api/category/add", data);
 
 export const delCate = (data) => http.post("/api/category/delete", data);
+
+export const uploadFile = (data) => http.filePost("/api/qiniu/upload", data);

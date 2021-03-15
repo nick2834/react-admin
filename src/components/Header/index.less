@@ -7,13 +7,12 @@
   height: var(--defaultHeight);
   line-height: var(--defaultHeight);
   .left {
-    display: flex;
     align-items: center;
   }
   .toggle {
     margin-right: 10px;
-    &:hover{
-      background: rgba(0,0,0,.025);
+    &:hover {
+      background: rgba(0, 0, 0, 0.025);
     }
   }
   .trigger {
@@ -22,9 +21,24 @@
     line-height: var(--defaultHeight);
     cursor: pointer;
     transition: color 0.3s;
-    
+
     &:hover {
-      color: #1890ff;
+      color: @primary-color;
     }
+  }
+  .color{
+    &:hover{
+      .color_picker{
+        display: block;
+      }
+    }
+  }
+  .color_picker {
+    position: absolute;
+    top: 50px;
+    right: 65px;
+    z-index: 2;
+    line-height: 1;
+    display: none;
   }
 }

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Layout, Menu, Dropdown, Modal, Breadcrumb } from 'antd';
-import { DownOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { Layout, Menu, Dropdown, Modal, Breadcrumb,message } from 'antd';
+import { DownOutlined, MenuFoldOutlined, MenuUnfoldOutlined, BgColorsOutlined } from '@ant-design/icons';
+import { SketchPicker } from 'react-color';
 import memoryUtils from '@/utils/memoryUtils';
 import storageUtils from '@/utils/storageUtils';
 import './index.less';
@@ -9,6 +10,9 @@ import menuList from '@/config/menuConfig';
 
 const { Header } = Layout
 class MHeader extends Component {
+    state = {
+        background: "#108ee9"
+    }
     logout = () => {
         Modal.confirm({
             content: '确定退出吗?',
@@ -48,7 +52,17 @@ class MHeader extends Component {
             </Breadcrumb>
         )
     }
+    selectColor = (color) => {
+        const { hex } = color;
+        window.less.modifyVars({
+            '@primary-color': hex
+        }).then(() =>{
+            message.success("修改主题成功")
+        })
+        this.setState({ background: hex });
+    }
     render() {
+        const { background } = this.state;
         const menu = (
             <Menu>
                 <Menu.Item>修改密码</Menu.Item>
@@ -72,12 +86,22 @@ class MHeader extends Component {
                     }
                 </div>
                 <div className="right flex">
+                    <span className="toggle color">
+                        <BgColorsOutlined className="trigger" />
+                        <span className="color_picker">
+                            <SketchPicker
+                                color={background}
+                                onChange={this.selectColor}
+                            />
+                        </span>
+                    </span>
                     <Dropdown overlay={menu}>
                         <a className="ant-dropdown-link" onClick={e => e.preventDefault()} href="javacript:void(0);">
                             欢迎： {username} <DownOutlined />
                         </a>
                     </Dropdown>
                 </div>
+
             </Header>
         )
     }

@@ -53,6 +53,16 @@ class Http {
             })
         });
     }
+
+    static filePost(api, params) {
+        return new Promise((res, rej) => {
+            axios.post(api, params, {
+                headers: { 'content-type': 'application/x-www-form-urlencoded' }
+            }).then(({ data }) => {
+                res(data);
+            })
+        });
+    }
     static delete(api, params) {
         return new Promise((res, rej) => {
             axios.delete(api, params).then(({ data }) => {

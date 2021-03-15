@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input, Button, Select, Space, message } from 'antd'
+import { Modal, Form, Input, Select, message } from 'antd'
 import { roleList, addUser } from '@/api';
 
 const { Option } = Select;
 class AddUser extends Component {
+    formRef = React.createRef();
     state = {
         roleList: [],
         statusList: [
@@ -32,15 +33,20 @@ class AddUser extends Component {
     handleConfirm = (status) => {
         this.props.onConfirm(status)
     }
-    onFinish = async (values) => {
-        // const { initUser } = this.props;
-        const result = await addUser(values);
-        if (result.status === 0) {
-            message.success("添加成功")
-            this.props.onConfirm(true)
-        } else {
-            message.error(result.msg)
-        }
+    onFinish = () => {
+        this.formRef.current
+            .validateFields()
+            .then(async (data) => {
+                const result = await addUser(data);
+                if (result.status === 0) {
+                    message.success("添加成功")
+                    this.props.onConfirm(true)
+                } else {
+                    message.error(result.msg)
+                }
+            })
+        return
+
     };
     getRoleList = async () => {
         const result = await roleList({ pageSize: 9999 })
@@ -59,17 +65,22 @@ class AddUser extends Component {
             labelCol: { span: 4 },
             wrapperCol: { span: 20 },
         }
-        const tailLayout = {
-            wrapperCol: { offset: 4, span: 16 },
-        }
         const { roleList } = this.state;
         const { isUserModal, initUser, statusList } = this.props;
         return (
-            <Modal visible={isUserModal} footer={null} closable={false} destroyOnClose>
+            <Modal
+                visible={isUserModal}
+                title={initUser ? '用户编辑' : '新增用户'}
+                destroyOnClose
+                cancelText="取消"
+                okText={initUser ? '编辑' : '增加'}
+                onOk={this.onFinish}
+                onCancel={() => this.props.onConfirm(false)}
+            >
                 <Form
                     {...layout}
                     name="basic"
-                    onFinish={this.onFinish}
+                    ref={this.formRef}
                 >
                     <Form.Item
                         label="用户名"
@@ -96,7 +107,7 @@ class AddUser extends Component {
                             }
                         </Select>
                     </Form.Item>
-                    <Form.Item name="status" label="状态" rules={[{ required: true, message: '请配置权限' }]} initialValue={initUser ? initUser.status : ""}>
+                    <Form.Item name="status" label="状态" rules={[{ required: true, message: '请配置账号状态' }]} initialValue={initUser ? initUser.status : ""}>
                         <Select placeholder="请选择账号状态" value={initUser ? { key: initUser.status, label: initUser.statusTitle } : null}>
                             {
                                 statusList.map((item) => {
@@ -106,12 +117,6 @@ class AddUser extends Component {
                                 })
                             }
                         </Select>
-                    </Form.Item>
-                    <Form.Item {...tailLayout}>
-                        <Space size="middle">
-                            <Button type="primary" htmlType="submit">{initUser ? '编辑' : '增加'}</Button>
-                            <Button onClick={() => this.props.onConfirm(false)}>取消</Button>
-                        </Space>
                     </Form.Item>
                 </Form>
             </Modal>
