@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom'
 import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import logo from '@/assets/images/logo.png'
 import './login.less';
 import { reqLogin } from '@/api';
 import memoryUtils from '@/utils/memoryUtils'
@@ -45,10 +44,6 @@ export default class Login extends Component {
         }
         return (
             <div className="login">
-                <header className='login-header'>
-                    <img src={logo} alt="logo" />
-                    <h1>React 项目: 后台管理系统</h1>
-                </header>
                 <div className="login_content">
                     <h2>用户登录</h2>
                     <Form
@@ -85,6 +80,9 @@ export default class Login extends Component {
                             <Button type="primary" htmlType="submit" className="login-form-button" loading={loadings}>登录</Button>
                         </Form.Item>
                     </Form>
+                </div>
+                <div className="footer">
+                    
                 </div>
             </div>
         )

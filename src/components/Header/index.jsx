@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Layout, Menu, Dropdown, Modal, Breadcrumb,message } from 'antd';
+import { Layout, Menu, Dropdown, Modal, Breadcrumb, message } from 'antd';
 import { DownOutlined, MenuFoldOutlined, MenuUnfoldOutlined, BgColorsOutlined } from '@ant-design/icons';
 import { SketchPicker } from 'react-color';
 import memoryUtils from '@/utils/memoryUtils';
 import storageUtils from '@/utils/storageUtils';
 import './index.less';
 import menuList from '@/config/menuConfig';
-
-const { Header } = Layout
+import PwdModal from "./pwd-modal";
+const { Header } = Layout;
 class MHeader extends Component {
     state = {
-        background: "#108ee9"
+        background: "#108ee9",
+        isShow: false,
+        user: memoryUtils.user
     }
     logout = () => {
         Modal.confirm({
@@ -56,20 +58,26 @@ class MHeader extends Component {
         const { hex } = color;
         window.less.modifyVars({
             '@primary-color': hex
-        }).then(() =>{
+        }).then(() => {
             message.success("修改主题成功")
         })
         this.setState({ background: hex });
     }
+    changePwd = () => {
+        this.setState({ isShow: true })
+    }
+    onSubmit = (value) => {
+        this.setState({ isShow: false })
+    }
     render() {
-        const { background } = this.state;
+        const { background, isShow, user } = this.state;
         const menu = (
             <Menu>
-                <Menu.Item>修改密码</Menu.Item>
+                <Menu.Item onClick={this.changePwd}>修改密码</Menu.Item>
                 <Menu.Item onClick={this.logout}>退出</Menu.Item>
             </Menu>
         );
-        const username = memoryUtils.user.username;
+        const username = user.username;
         const { collapsed } = this.props;
         return (
             <Header className="header">
@@ -95,13 +103,13 @@ class MHeader extends Component {
                             />
                         </span>
                     </span>
-                    <Dropdown overlay={menu}>
+                    <Dropdown overlay={menu} trigger={['click']}>
                         <a className="ant-dropdown-link" onClick={e => e.preventDefault()} href="javacript:void(0);">
                             欢迎： {username} <DownOutlined />
                         </a>
                     </Dropdown>
                 </div>
-
+                <PwdModal isShow={isShow} onSubmit={this.onSubmit} user={user}/>
             </Header>
         )
     }
