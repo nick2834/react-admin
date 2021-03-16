@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import { Card, Form, Input, PageHeader, TreeSelect, Button, Row, Col, Upload } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Card, Form, Input, PageHeader, TreeSelect, Button, Row, Col, Upload, message, Space, Image } from 'antd';
+import { CloudUploadOutlined } from '@ant-design/icons';
 import { typelist, uploadFile } from '@/api';
 import 'braft-editor/dist/index.css';
 import BraftEditor from 'braft-editor'
-
+const { Dragger } = Upload;
 const { TreeNode } = TreeSelect;
 export default class AddArticles extends Component {
     state = {
         editorState: BraftEditor.createEditorState('<p>Hello <b>World!</b></p>'), // 设置编辑器初始内容
         outputHTML: '<p></p>',
-        fileList: []
+        fileList: [],
+        coverImage: null
     }
     initOptions = () => {
 
@@ -48,13 +49,6 @@ export default class AddArticles extends Component {
     }
     componentDidMount() {
         this.getCategoryList()
-        this.isLivinig = true
-        // 3秒后更改编辑器内容
-        setTimeout(this.setEditorContentAsync, 3000)
-    }
-
-    componentWillUnmount() {
-        this.isLivinig = false
     }
 
     handleChange = (editorState) => {
@@ -64,39 +58,47 @@ export default class AddArticles extends Component {
         })
     }
 
-    setEditorContentAsync = () => {
-        this.isLivinig && this.setState({
-            editorState: BraftEditor.createEditorState('<p>你好，<b>世界!</b><p>')
-        })
-    }
-
     handleSelect = (value) => {
         console.log(value)
     }
-    handleUploadChange = (options) =>{
-        
-    }
-    customRequest = async (options) => {
-        const { onSuccess, onError, file, onProgress } = options;
-        console.log(file)
-        let formdata = new FormData()
-        formdata.append('file', file)
-        await uploadFile(formdata)
-    }
     render() {
-        const { editorState, outputHTML, fileList } = this.state;
+        let _this = this;
+        const { editorState, coverImage } = this.state;
         const title = (
             <PageHeader style={{ padding: 0 }} onBack={() => this.props.history.goBack()} title="返回" />
         )
-        const uploadButton = (
-            <div>
-                <PlusOutlined />
-                <div style={{ marginTop: 8 }}>Upload</div>
-            </div>
-        );
+        const extra = (
+            <Space size="middle">
+                <Button type="primary">保存</Button>
+                <Button type="danger">草稿</Button>
+            </Space>
+
+        )
+
+        const props = {
+            name: 'file',
+            action: 'http://localhost:5000/api/qiniu/upload',
+            showUploadList: false,
+            maxCount: 1,
+            onChange(info) {
+                const { status } = info.file;
+                if (status !== 'uploading') {
+                    const { response } = info.fileList[0]
+                    if (response.status === 0) {
+                        console.log(response.data)
+                        _this.setState({ coverImage: response.data.key })
+                    }
+                }
+                if (status === 'done') {
+                    message.success(`上传成功`);
+                } else if (status === 'error') {
+                    message.error(`上传失败`);
+                }
+            },
+        };
         return (
             <div>
-                <Card title={title}>
+                <Card title={title} extra={extra}>
                     <Form>
                         <Row>
                             <Col span={12}>
@@ -122,34 +124,28 @@ export default class AddArticles extends Component {
                                     </TreeSelect>
                                 </Form.Item>
                             </Col>
-                            <Col span={24}>
-                                <Form.Item label="文章封面" name="cover_image">
-                                    <Upload
-                                        action="http://localhost:5000/api/qiniu/upload"
-                                        listType="picture-card"
-                                        fileList={fileList}
-                                        onPreview={this.handlePreview}
-                                        onChange={this.handleUploadChange}
-                                    >
-                                        {fileList.length >= 8 ? null : uploadButton}
-                                    </Upload>
-                                </Form.Item>
-                            </Col>
                         </Row>
 
-                        <Form.Item label="文章内容" name="content" rules={[{ required: true }]}>
+                        <Form.Item name="content" rules={[{ required: true }]}>
                             <BraftEditor
                                 className="editor"
                                 value={editorState}
                                 onChange={this.handleChange}
                             />
                         </Form.Item>
-                        <Form.Item>
-                            <Button type="primary" htmlType="submit">保存</Button>
-                        </Form.Item>
+                        <Space>
+                            <Dragger className="drag_upload" {...props}>
+                                <p className="ant-upload-drag-icon">
+                                    <CloudUploadOutlined />
+                                </p>
+                                <p className="ant-upload-text">（文章封面）将文件拖到此处，或点击上传</p>
+                            </Dragger>
+
+                            {coverImage && <div className="image-preview">
+                                <Image object-fit="scaleToFill" width={"100%"} src={coverImage} />
+                            </div>}
+                        </Space>
                     </Form>
-                    <h5>输出内容</h5>
-                    <div className="output-content">{outputHTML}</div>
                 </Card>
             </div>
         )

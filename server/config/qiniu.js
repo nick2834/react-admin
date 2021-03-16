@@ -79,7 +79,7 @@ class Qiniu {
     removeTempFile(filePath) {
         if (filePath) {
             fs.unlink(filePath, (err) => {
-                console.log(err);
+                // console.log(err);
             });
         }
     }
