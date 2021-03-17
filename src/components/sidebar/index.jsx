@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Menu } from 'antd';
+import { connect } from 'react-redux'
 import './index.less';
-// import logo from '@/assets/images/logo.png';
+
 import MenuList from '@/config/menuConfig';
-import memoryUtils from '@/utils/memoryUtils';
 const { SubMenu } = Menu;
 class Sidebar extends Component {
     /*
@@ -12,7 +12,8 @@ class Sidebar extends Component {
    */
     hasAuth = (item) => {
         const { key, isPublic } = item;
-        const { username, menus } = memoryUtils.user;
+        console.log(this.props)
+        const {menus,username} = this.props.users
         /*
         1. 如果当前用户是admin
         2. 如果当前item是公开的
@@ -76,4 +77,7 @@ class Sidebar extends Component {
     }
 }
 //withRouter 非路由组件变路由组件  高阶函数
-export default withRouter(Sidebar)
+export default connect(
+    state => ({ users: state.users }),
+    {}
+)(withRouter(Sidebar))

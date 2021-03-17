@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom'
-import { Form, Input, Button, message } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { connect } from 'react-redux'
 import './login.less';
-import { reqLogin } from '@/api';
-import memoryUtils from '@/utils/memoryUtils'
-import storageUtils from '@/utils/storageUtils'
-export default class Login extends Component {
+
+
+import { login } from '@/actions/user_actions'
+class Login extends Component {
     state = { loadings: false }
     validatorPwd = (rule, value, callback) => {
         if (!value) {
@@ -20,26 +21,13 @@ export default class Login extends Component {
         }
     }
     onFinish = async (values) => {
-        this.setState({ loadings: true })
-        const { username, password } = values
-        const result = await reqLogin(username, password);
-        if (result.status === 0) {
-            this.setState({ loadings: false })
-            message.success('登陆成功');
-            const user = result.data
-            memoryUtils.user = user // 保存在内存中
-            storageUtils.saveUser(user) // 保存到local中
-            this.props.history.replace('/')
-        } else { // 登陆失败
-            this.setState({ loadings: false })
-            // 提示错误信息
-            message.error(result.msg)
-        }
+        const { username, password } = values;
+        this.props.login(username, password)
     }
     render() {
         const { loadings } = this.state;
-        const user = memoryUtils.user;
-        if (user && user.user_id) {
+        const { users } = this.props;
+        if (users && users.user_id) {
             return <Redirect to='/' />
         }
         return (
@@ -82,10 +70,15 @@ export default class Login extends Component {
                     </Form>
                 </div>
                 <div className="footer">
-                    
+
                 </div>
             </div>
         )
 
     }
 }
+
+export default connect(
+    state => ({ users: state.users }),
+    { login }
+)(Login)

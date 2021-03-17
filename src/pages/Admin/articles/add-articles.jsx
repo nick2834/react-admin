@@ -18,6 +18,7 @@ export default class AddArticles extends Component {
     }
     getCategoryList = async () => {
         const result = await typelist();
+        console.log(result)
         if (result.status === "0") {
             let categoryList = result.data;
             let treeData = categoryList.filter(item => item.pid === 0);

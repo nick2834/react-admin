@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Redirect, Switch, Route } from 'react-router-dom';
 import { Layout } from 'antd';
+import { connect } from 'react-redux'
 import Header from '@/components/Header';
 import Sidebar from '@/components/sidebar';
-import memoryUtils from '@/utils/memoryUtils';
 
 import Home from './home';
 import Category from './category';
@@ -12,20 +12,17 @@ import Role from './role';
 import User from './user';
 
 const { Footer, Content, Sider } = Layout;
-export default class Admin extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            collapsed: false
-        }
+class Admin extends Component {
+    state = {
+        collapsed: false
     }
     toggle = (collapsed) => {
         this.setState({ collapsed });
     };
     render() {
-        const { user } = memoryUtils;
+        const users = this.props.users;
         const { collapsed } = this.state;
-        if (!user || !user.user_id) {
+        if (!users || !users.user_id) {
             return <Redirect to='/login' />
         }
         return (
@@ -53,3 +50,8 @@ export default class Admin extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({ users: state.users }),
+    {}
+)(Admin)

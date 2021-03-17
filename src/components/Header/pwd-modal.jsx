@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { Modal, Form, Input } from 'antd';
+import { connect } from 'react-redux'
+import { logout } from '@/actions/user_actions'
 
-export default class PwdModal extends Component {
+class PwdModal extends Component {
     formRef = React.createRef();
     constructor(props) {
         super(props)
@@ -32,7 +34,7 @@ export default class PwdModal extends Component {
                 onCancel={() => this.props.onSubmit(false)}
             >
                 <Form {...layout} ref={this.formRef}>
-                    <Form.Item label="原密码" name="password" rules={[{ required: true,message:"请输入原始密码" }]}>
+                    <Form.Item label="原密码" name="password" rules={[{ required: true, message: "请输入原始密码" }]}>
                         <Input.Password />
                     </Form.Item>
                     <Form.Item label="新密码" name="newPassword" rules={[{ required: true }]}>
@@ -46,3 +48,8 @@ export default class PwdModal extends Component {
         )
     }
 }
+
+export default connect(
+    (state) => ({ users: state.users }),
+    { logout }
+)(PwdModal)

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux'
 import { Layout, Menu, Dropdown, Modal, Breadcrumb, message } from 'antd';
 import { DownOutlined, MenuFoldOutlined, MenuUnfoldOutlined, BgColorsOutlined } from '@ant-design/icons';
 import { SketchPicker } from 'react-color';
-import memoryUtils from '@/utils/memoryUtils';
-import storageUtils from '@/utils/storageUtils';
+import { logout } from '@/actions/user_actions'
 import './index.less';
 import menuList from '@/config/menuConfig';
 import PwdModal from "./pwd-modal";
@@ -12,18 +12,13 @@ const { Header } = Layout;
 class MHeader extends Component {
     state = {
         background: "#108ee9",
-        isShow: false,
-        user: memoryUtils.user
+        isShow: false
     }
     logout = () => {
         Modal.confirm({
             content: '确定退出吗?',
             onOk: () => {
-                // 删除保存的user数据
-                storageUtils.removeUser()
-                memoryUtils.user = {}
-                // 跳转到login
-                this.props.history.replace('/login')
+                this.props.logout()
             }
         })
     }
@@ -71,14 +66,14 @@ class MHeader extends Component {
     }
     render() {
         const { background, isShow, user } = this.state;
+        const { collapsed } = this.props
+        const username = this.props.users.username
         const menu = (
             <Menu>
                 <Menu.Item onClick={this.changePwd}>修改密码</Menu.Item>
                 <Menu.Item onClick={this.logout}>退出</Menu.Item>
             </Menu>
         );
-        const username = user.username;
-        const { collapsed } = this.props;
         return (
             <Header className="header">
                 <div className="left flex">
@@ -109,10 +104,13 @@ class MHeader extends Component {
                         </a>
                     </Dropdown>
                 </div>
-                <PwdModal isShow={isShow} onSubmit={this.onSubmit} user={user}/>
+                <PwdModal isShow={isShow} onSubmit={this.onSubmit} user={user} />
             </Header>
         )
     }
 }
 
-export default withRouter(MHeader)
+export default connect(
+    state => ({ users: state.users }),
+    { logout }
+)(withRouter(MHeader))
