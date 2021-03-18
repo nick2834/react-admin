@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import './index.less';
 
 import MenuList from '@/config/menuConfig';
-import menus from '@/config/defaultMenu'
 const { SubMenu } = Menu;
 class Sidebar extends Component {
     /*

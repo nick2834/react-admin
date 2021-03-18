@@ -1,4 +1,4 @@
-const menus = [{
+const routes = [{
         title: "首页", // 菜单标题名称
         path: "/home", // 对应的path
     },
@@ -30,4 +30,4 @@ const menus = [{
     },
 ];
 
-export default menus;
+export default routes;

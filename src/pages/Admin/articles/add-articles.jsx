@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card, Form, Input, PageHeader, TreeSelect, Button, Row, Col, Upload, message, Space, Image } from 'antd';
 import { CloudUploadOutlined } from '@ant-design/icons';
-import { typelist, uploadFile } from '@/api';
+import { typelist } from '@/api';
 import 'braft-editor/dist/index.css';
 import BraftEditor from 'braft-editor'
 const { Dragger } = Upload;
