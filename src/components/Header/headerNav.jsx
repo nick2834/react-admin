@@ -7,17 +7,6 @@ import { addTagViews, delTagViews } from '@/actions/tags_actions'
 const { TabPane } = Tabs;
 
 class headerNav extends Component {
-    constructor(props) {
-        super(props)
-    }
-    state = {
-        navTabs: [
-            {
-                title: "首页",
-                path: "/home"
-            }
-        ]
-    }
     pushMenus = (pathname) => {
         let { tagsViews } = this.props;
         const hasOwnPathIndex = tagsViews.findIndex(item => item.path === pathname)
