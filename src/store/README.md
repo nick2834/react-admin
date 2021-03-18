@@ -139,4 +139,10 @@ const mapStateToProps = (state, ownProps) => {counter: state.counter}
 
 // 通过connect连接组件和redux数据,传递state数据和dispatch方法
 export default connect(mapStateToProps)(Home)
+
+
+export default connect(
+    (state) => {counter: state.counter},
+    {} //存放action内函数
+)(Home)
 ```

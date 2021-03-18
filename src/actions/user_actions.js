@@ -26,8 +26,7 @@ export const login = (username, password) => {
         } else {
             // 2.2. 如果失败, 分发失败的同步action
             const msg = result.msg;
-            console.log(msg)
-                // message.error(msg)
+            // message.error(msg)
             dispatch(showErrorMsg(msg));
         }
     };

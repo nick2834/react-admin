@@ -19,7 +19,8 @@ export default class AddRole extends Component {
             .then(async (event) => {
                 const { user_id, username } = memoryUtils.user;
                 const userObject = { create_user_id: user_id, create_user_name: username }
-                const data = Object.assign(event, userObject);
+                // const data = Object.assign(event, userObject);
+                const data = { ...event, userObject };
                 const result = await addRole(data)
                 if (result.status === 0) {
                     message.success('添加成功')
@@ -28,7 +29,7 @@ export default class AddRole extends Component {
                     message.error(result.msg)
                     this.props.onConfirm(false)
                 }
-            }).catch(err =>{})
+            }).catch(err => { })
     }
     render() {
         const { isModalVisible } = this.props;

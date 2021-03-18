@@ -1,4 +1,4 @@
-import { HomeOutlined, UserOutlined, TeamOutlined,AuditOutlined,FormOutlined } from "@ant-design/icons";
+import { HomeOutlined, UserOutlined, TeamOutlined, AuditOutlined, FormOutlined } from "@ant-design/icons";
 const menuList = [{
     title: "首页", // 菜单标题名称
     key: "/home", // 对应的path
@@ -18,7 +18,7 @@ const menuList = [{
     {
         title: "文章管理",
         key: "/articles",
-        icon: < FormOutlined />,
+        icon: < FormOutlined />
     },
     ],
 },

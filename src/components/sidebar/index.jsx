@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import './index.less';
 
 import MenuList from '@/config/menuConfig';
+import menus from '@/config/defaultMenu'
 const { SubMenu } = Menu;
 class Sidebar extends Component {
     /*
@@ -12,8 +13,7 @@ class Sidebar extends Component {
    */
     hasAuth = (item) => {
         const { key, isPublic } = item;
-        console.log(this.props)
-        const {menus,username} = this.props.users
+        const { menus, username } = this.props.users
         /*
         1. 如果当前用户是admin
         2. 如果当前item是公开的
@@ -54,14 +54,14 @@ class Sidebar extends Component {
         this.menuNodes = this.getMenuNodes(MenuList)
     }
     render() {
-
-        const path = this.props.location.pathname;
+        let path = this.props.location.pathname;
+        //文章子路由高亮
+        if (path.indexOf('/articles') !== -1) {
+            path = "/articles"
+        }
         const openKey = this.openKey;
         return (
             <div className="side_bar">
-                {/* <div className="logo" >
-                    <img src={logo} alt="" />
-                </div> */}
                 <Menu
                     selectedKeys={[path]}
                     defaultOpenKeys={[openKey]}

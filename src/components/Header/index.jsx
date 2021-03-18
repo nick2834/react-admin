@@ -8,6 +8,7 @@ import { logout } from '@/actions/user_actions'
 import './index.less';
 import menuList from '@/config/menuConfig';
 import PwdModal from "./pwd-modal";
+import HeaderNav from './headerNav'
 const { Header } = Layout;
 class MHeader extends Component {
     state = {
@@ -76,34 +77,37 @@ class MHeader extends Component {
         );
         return (
             <Header className="header">
-                <div className="left flex">
-                    <span className="toggle">
-                        {
-                            collapsed ?
-                                <MenuUnfoldOutlined className="trigger" onClick={this.toggle} /> :
-                                <MenuFoldOutlined className="trigger" onClick={this.toggle} />
-                        }
-                    </span>
-                    {
-                        this.getBreadCrumbPath()
-                    }
-                </div>
-                <div className="right flex">
-                    <span className="toggle color">
-                        <BgColorsOutlined className="trigger" />
-                        <span className="color_picker">
-                            <SketchPicker
-                                color={background}
-                                onChange={this.selectColor}
-                            />
+                <div className="header_body flex">
+                    <div className="left flex">
+                        <span className="toggle">
+                            {
+                                collapsed ?
+                                    <MenuUnfoldOutlined className="trigger" onClick={this.toggle} /> :
+                                    <MenuFoldOutlined className="trigger" onClick={this.toggle} />
+                            }
                         </span>
-                    </span>
-                    <Dropdown overlay={menu} trigger={['click']}>
-                        <a className="ant-dropdown-link" onClick={e => e.preventDefault()} href="javacript:void(0);">
-                            欢迎： {username} <DownOutlined />
-                        </a>
-                    </Dropdown>
+                        {
+                            this.getBreadCrumbPath()
+                        }
+                    </div>
+                    <div className="right flex">
+                        <span className="toggle color">
+                            <BgColorsOutlined className="trigger" />
+                            <span className="color_picker">
+                                <SketchPicker
+                                    color={background}
+                                    onChange={this.selectColor}
+                                />
+                            </span>
+                        </span>
+                        <Dropdown overlay={menu} trigger={['click']}>
+                            <a className="ant-dropdown-link" onClick={e => e.preventDefault()} href="javacript:void(0);">
+                                欢迎： {username} <DownOutlined />
+                            </a>
+                        </Dropdown>
+                    </div>
                 </div>
+                <HeaderNav />
                 <PwdModal isShow={isShow} onSubmit={this.onSubmit} user={user} />
             </Header>
         )
