@@ -30,6 +30,7 @@ export default class AddArticles extends Component {
                     item.children = (cateFind)
                 }
             })
+            console.log(treeData)
             this.treeNodes = this.initTreeData(treeData)
         }
     }

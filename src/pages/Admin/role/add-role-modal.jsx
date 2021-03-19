@@ -1,8 +1,8 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux';
 import { Modal, Form, Input, message } from 'antd';
 import { addRole } from '@/api';
-import memoryUtils from '@/utils/memoryUtils';
-export default class AddRole extends Component {
+class AddRole extends Component {
     formRef = React.createRef();
     constructor(props) {
         super(props);
@@ -17,10 +17,9 @@ export default class AddRole extends Component {
         this.formRef.current
             .validateFields()
             .then(async (event) => {
-                const { user_id, username } = memoryUtils.user;
-                const userObject = { create_user_id: user_id, create_user_name: username }
+                const { user_id, username } = this.props.users;
                 // const data = Object.assign(event, userObject);
-                const data = { ...event, userObject };
+                const data = { ...event, create_user_id: user_id, create_user_name: username };
                 const result = await addRole(data)
                 if (result.status === 0) {
                     message.success('添加成功')
@@ -57,3 +56,8 @@ export default class AddRole extends Component {
         )
     }
 }
+
+export default connect(
+    (state) => ({ users: state.users }),
+    {}
+)(AddRole)
