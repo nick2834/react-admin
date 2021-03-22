@@ -1,11 +1,12 @@
 import { sStorage } from "@/utils/tools";
 
+const tagsViews = sStorage._store.tagsViews
 const SESSION_TYPE = "tagsViews";
 
 const list = [{ title: "首页", path: "/home" }];
 
 const tagsReducer = (
-    state = JSON.parse(sStorage._store.tagsViews) || list,
+    state = tagsViews ? JSON.parse(tagsViews) : list,
     action
 ) => {
     switch (action.type) {

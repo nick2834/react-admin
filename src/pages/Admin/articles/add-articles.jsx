@@ -7,6 +7,7 @@ import BraftEditor from 'braft-editor'
 const { Dragger } = Upload;
 const { TreeNode } = TreeSelect;
 export default class AddArticles extends Component {
+    formRef = React.createRef();
     state = {
         editorState: BraftEditor.createEditorState('<p>Hello <b>World!</b></p>'), // 设置编辑器初始内容
         outputHTML: '<p></p>',
@@ -18,7 +19,6 @@ export default class AddArticles extends Component {
     }
     getCategoryList = async () => {
         const result = await typelist();
-        console.log(result)
         if (result.status === "0") {
             let categoryList = result.data;
             let treeData = categoryList.filter(item => item.pid === 0);
@@ -30,8 +30,8 @@ export default class AddArticles extends Component {
                     item.children = (cateFind)
                 }
             })
-            console.log(treeData)
-            this.treeNodes = this.initTreeData(treeData)
+            const treeDataNodes = this.initTreeData(treeData)
+            this.setState({ treeDataNodes })
         }
     }
     initTreeData = (treeData) => {
@@ -57,21 +57,33 @@ export default class AddArticles extends Component {
         this.setState({
             editorState: editorState,
             outputHTML: editorState.toHTML()
+        }, () => {
+            this.formRef.current.setFieldsValue({
+                content: this.state.outputHTML
+            });
         })
     }
-
+    handleSave = () => {
+        this.formRef.current
+            .validateFields()
+            .then(async (data) => {
+                console.log(data)
+            }).catch(err => { })
+    }
     handleSelect = (value) => {
-        console.log(value)
+        // this.formRef.current.setFieldsValue({
+        //     category: `${value}`
+        // });
     }
     render() {
         let _this = this;
-        const { editorState, coverImage } = this.state;
+        const { editorState, coverImage, treeDataNodes } = this.state;
         const title = (
             <PageHeader style={{ padding: 0 }} onBack={() => this.props.history.goBack()} title="返回" />
         )
         const extra = (
             <Space size="middle">
-                <Button type="primary">保存</Button>
+                <Button type="primary" onClick={this.handleSave}>保存</Button>
                 <Button type="danger">草稿</Button>
             </Space>
 
@@ -87,8 +99,10 @@ export default class AddArticles extends Component {
                 if (status !== 'uploading') {
                     const { response } = info.fileList[0]
                     if (response.status === 0) {
-                        console.log(response.data)
                         _this.setState({ coverImage: response.data.key })
+                        _this.formRef.current.setFieldsValue({
+                            coverImage: `${response.data.key}`
+                        });
                     }
                 }
                 if (status === 'done') {
@@ -101,7 +115,7 @@ export default class AddArticles extends Component {
         return (
             <div>
                 <Card title={title} extra={extra}>
-                    <Form>
+                    <Form ref={this.formRef}>
                         <Row>
                             <Col span={12}>
                                 <Form.Item label="文章标题" name="title" rules={[{ required: true }]} >
@@ -116,13 +130,14 @@ export default class AddArticles extends Component {
                             <Col span={12}>
                                 <Form.Item label="文章分类" name="category" rules={[{ required: true }]} >
                                     <TreeSelect
+                                        treeDataSimpleMode
                                         style={{ width: "90%" }}
                                         placeholder="请选择文章分类"
                                         multiple
                                         treeDefaultExpandAll
                                         onChange={this.handleSelect}
                                     >
-                                        {this.treeNodes}
+                                        {treeDataNodes}
                                     </TreeSelect>
                                 </Form.Item>
                             </Col>
@@ -135,18 +150,20 @@ export default class AddArticles extends Component {
                                 onChange={this.handleChange}
                             />
                         </Form.Item>
-                        <Space>
-                            <Dragger className="drag_upload" {...props}>
-                                <p className="ant-upload-drag-icon">
-                                    <CloudUploadOutlined />
-                                </p>
-                                <p className="ant-upload-text">（文章封面）将文件拖到此处，或点击上传</p>
-                            </Dragger>
+                        <Form.Item name="coverImage" rules={[{ required: true }]}>
+                            <Space>
+                                <Dragger className="drag_upload" {...props}>
+                                    <p className="ant-upload-drag-icon">
+                                        <CloudUploadOutlined />
+                                    </p>
+                                    <p className="ant-upload-text">（文章封面）将文件拖到此处，或点击上传</p>
+                                </Dragger>
 
-                            {coverImage && <div className="image-preview">
-                                <Image object-fit="scaleToFill" width={"100%"} src={coverImage} />
-                            </div>}
-                        </Space>
+                                {coverImage && <div className="image-preview">
+                                    <Image object-fit="scaleToFill" width={"100%"} src={coverImage} />
+                                </div>}
+                            </Space>
+                        </Form.Item>
                     </Form>
                 </Card>
             </div>
