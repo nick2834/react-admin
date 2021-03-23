@@ -24,10 +24,15 @@ export const delRole = (role_id) => http.post(`/api/role/delete/${role_id}`);
 
 export const categoryList = (data) => http.post("/api/category/list", data);
 
-export const typelist = () => http.get(`/api/category/typelist?date_time=${Date.now()}`);
+export const typelist = () =>
+    http.get(`/api/category/typelist?date_time=${Date.now()}`);
 
 export const addCate = (data) => http.post("/api/category/add", data);
 
 export const delCate = (data) => http.post("/api/category/delete", data);
 
 export const uploadFile = (data) => http.filePost("/api/qiniu/upload", data);
+
+export const addArticle = (data) => http.post("/api/article/add", data);
+
+export const articleList = (data) => http.post("/api/article/list", data);

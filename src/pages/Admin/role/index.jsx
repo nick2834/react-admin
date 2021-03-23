@@ -29,7 +29,7 @@ export default class Role extends Component {
             {
                 title: "更新时间",
                 dataIndex: 'update_time',
-                render: (create_time) => formatTime(create_time, "YYYY-MM-DD HH:mm:ss")
+                render: (update_time) => formatTime(update_time, "YYYY-MM-DD HH:mm:ss")
             },
             {
                 title: "操作",
@@ -99,7 +99,7 @@ export default class Role extends Component {
     }
     //配置权限窗口控制
     render() {
-        const { roleList, pagination, role, isModalVisible, isAuthModal,loading } = this.state;
+        const { roleList, pagination, role, isModalVisible, isAuthModal, loading } = this.state;
         const title = (
             <span className="card_title">
                 <Button type="primary" style={{ marginRight: '10px' }} onClick={this.handleAddRole}>创建角色</Button>

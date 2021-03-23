@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
 import { Card, Form, Input, PageHeader, TreeSelect, Button, Row, Col, Upload, message, Space, Image } from 'antd';
 import { CloudUploadOutlined } from '@ant-design/icons';
+import { connect } from 'react-redux';
 import { typelist } from '@/api';
 import 'braft-editor/dist/index.css';
 import BraftEditor from 'braft-editor'
+import { addArticle } from '@/api';
 const { Dragger } = Upload;
 const { TreeNode } = TreeSelect;
-export default class AddArticles extends Component {
+
+
+class AddArticles extends Component {
     formRef = React.createRef();
     state = {
         editorState: BraftEditor.createEditorState('<p>Hello <b>World!</b></p>'), // 设置编辑器初始内容
         outputHTML: '<p></p>',
         fileList: [],
-        coverImage: null
+        cover_image: null
     }
     initOptions = () => {
 
@@ -64,20 +68,26 @@ export default class AddArticles extends Component {
         })
     }
     handleSave = () => {
+        const { users } = this.props;
+        console.log(users)
         this.formRef.current
             .validateFields()
             .then(async (data) => {
                 console.log(data)
+                const articleData = { ...data, user_id: users.user_id }
+                const result = await addArticle(articleData)
+                console.log(result)
             }).catch(err => { })
     }
     handleSelect = (value) => {
-        // this.formRef.current.setFieldsValue({
-        //     category: `${value}`
-        // });
+        console.log(value)
+        this.formRef.current.setFieldsValue({
+            type_id: JSON.stringify(value)
+        });
     }
     render() {
         let _this = this;
-        const { editorState, coverImage, treeDataNodes } = this.state;
+        const { editorState, cover_image, treeDataNodes } = this.state;
         const title = (
             <PageHeader style={{ padding: 0 }} onBack={() => this.props.history.goBack()} title="返回" />
         )
@@ -99,9 +109,9 @@ export default class AddArticles extends Component {
                 if (status !== 'uploading') {
                     const { response } = info.fileList[0]
                     if (response.status === 0) {
-                        _this.setState({ coverImage: response.data.key })
+                        _this.setState({ cover_image: response.data.key })
                         _this.formRef.current.setFieldsValue({
-                            coverImage: `${response.data.key}`
+                            cover_image: `${response.data.key}`
                         });
                     }
                 }
@@ -123,10 +133,11 @@ export default class AddArticles extends Component {
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
-                                <Form.Item label="副标题" name="subTttle" rules={[{ required: true }]} >
+                                <Form.Item label="副标题" name="subtitle" rules={[{ required: true }]} >
                                     <Input style={{ width: "90%" }} />
                                 </Form.Item>
                             </Col>
+                            <Form.Item name="type_id" hidden><Input/></Form.Item>
                             <Col span={12}>
                                 <Form.Item label="文章分类" name="category" rules={[{ required: true }]} >
                                     <TreeSelect
@@ -150,7 +161,7 @@ export default class AddArticles extends Component {
                                 onChange={this.handleChange}
                             />
                         </Form.Item>
-                        <Form.Item name="coverImage" rules={[{ required: true }]}>
+                        <Form.Item name="cover_image" rules={[{ required: true }]}>
                             <Space>
                                 <Dragger className="drag_upload" {...props}>
                                     <p className="ant-upload-drag-icon">
@@ -159,8 +170,8 @@ export default class AddArticles extends Component {
                                     <p className="ant-upload-text">（文章封面）将文件拖到此处，或点击上传</p>
                                 </Dragger>
 
-                                {coverImage && <div className="image-preview">
-                                    <Image object-fit="scaleToFill" width={"100%"} src={coverImage} />
+                                {cover_image && <div className="image-preview">
+                                    <Image object-fit="scaleToFill" width={"100%"} src={cover_image} />
                                 </div>}
                             </Space>
                         </Form.Item>
@@ -170,3 +181,8 @@ export default class AddArticles extends Component {
         )
     }
 }
+
+export default connect(
+    (state) => ({ users: state.users }),
+    {}
+)(AddArticles)
